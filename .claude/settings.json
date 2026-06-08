@@ -6,7 +6,8 @@
       "Bash(echo \"global name: [$\\(git config --global user.name\\)]\")",
       "Bash(echo \"global email: [$\\(git config --global user.email\\)]\")",
       "Bash(git add *)",
-      "Bash(grep -iE \"\\\\.env\\\\.local$|node_modules|\\\\.next/\")"
+      "Bash(grep -iE \"\\\\.env\\\\.local$|node_modules|\\\\.next/\")",
+      "WebFetch(domain:commons.wikimedia.org)"
     ]
   }
 }

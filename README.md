@@ -8,7 +8,7 @@
 
 ## 專案簡介
 
-- 瀏覽 20 間台灣在地餐廳、加入購物車、選付款方式、下單。
+- 瀏覽 26 間台灣在地餐廳（台式 / 便當 / 熱炒 / 炸物 / 日式 / 異國 / 美式 / 義式 / 早午餐 / 飲料甜點 / 宵夜）、搜尋餐點、收藏、加入購物車、選付款方式、下單。
 - 下單後進入**永恆等待**的追蹤頁：外送員在地圖上 1~3 公里環帶內永遠繞圈，永遠不抵達。
 - 全程繁體中文、明亮白底亮色系（保留 Uber 綠 / panda 粉 / 暖黃點綴），藏了 5 個彩蛋。
 - **離線可玩**：未接 Supabase 時自動使用內建假資料與本地外送員模擬；接上 Supabase 後升級為 DB 讀取 + Realtime 即時座標。
@@ -38,7 +38,8 @@
 .
 ├── README.md                         # ← Single Source of Truth
 ├── .env.local.example                # 環境變數範本
-├── next.config.mjs                   # 圖片 remotePatterns（loremflickr / pravatar）
+├── next.config.mjs                   # 圖片 remotePatterns（pravatar 頭像）
+├── public/food/                      # 24 張本地美食照（每種菜色一張，永不破圖）
 ├── postcss.config.mjs                # Tailwind v4 PostCSS plugin
 ├── eslint.config.mjs
 ├── tsconfig.json
@@ -188,8 +189,13 @@ npm run lint
 
 ## 功能清單
 
+- [x] 26 間餐廳、24 種菜色本地美食照、每道菜圖文相符
+- [x] 真・搜尋（店名 / 分類 / 餐點名稱）、排序（推薦 / 評分 / 外送快 / 低消）、❤️ 收藏
+- [x] 選取目前位置（瀏覽器定位 + 反查地址，地圖中心跟著走）
+- [x] 美化配送地圖（CARTO 圖磚 + 自訂標記 + 脈動的家 + 外送員平滑滑動）
+- [x] 我的訂單頁（歷史訂單 + 再點一次 + 看進度）
 - [x] 首頁：3 張輪播 Banner、可滑動分類 tab、餐廳卡片（staggered 淡入）
-- [x] 首頁：裝飾用搜尋欄、底部「查看購物車」列（foodpanda 風，有品項才浮出）、頂部假定位列
+- [x] 首頁：底部「查看購物車」列（foodpanda 風，有品項才浮出）、頂部定位列
 - [x] 餐廳頁：Hero banner、店家資訊、菜單分類 tab（點了自動捲到該區 + 捲動高亮）、品項詳情 modal + 推薦加購
 - [x] 餐廳頁：5 則台灣口吻假評論
 - [x] 加入購物車彈跳動畫 + toast；菜單品項就地 +/− 數量器
@@ -240,8 +246,13 @@ npm run lint
   前端 client（`src/lib/supabase.ts`）只用 anon key。
 - **Tailwind v4 `@theme` 設計 token**：白底亮色系主題（Uber 綠 / panda 粉 / 暖黃點綴）以 CSS 變數定義，
   自動產生對應 utility class。
-- **美食圖片用 loremflickr 依關鍵字抓真實照片**：每間餐廳對應一組英文美食 tag（牛肉麵→`beef,noodle`、
-  珍奶→`bubble,tea`…），菜單品項再依分類（飲料/湯/甜點）細分，做到圖文相符；以 `lock` 參數固定每張圖避免每次重整都換。
+- **美食圖片改用本地真實照片（`public/food/`）**：曾用 loremflickr 關鍵字抓圖，但會破圖、又不夠精準。
+  改為下載一組 24 張策展過的真實美食照（台灣在地菜用 Wikimedia Commons：滷肉飯/珍奶/火鍋/豆花/台式雞排；
+  其餘用 TheMealDB），放進 `public/food/`，由 `dishToFoodType()` 以菜名+分類關鍵字逐道對應正確類型。
+  好處：永不破圖、載入快、圖文相符。`image_url` 存的是 `/food/xxx.jpg` 本地路徑。
+- **搜尋是真的**：首頁拿到一份「餐廳 id → 店名+分類+所有菜名」索引（`getRestaurantSearchIndex`），前端即時過濾。
+- **可選目前位置**：TopBar 用瀏覽器 Geolocation 取座標、Nominatim 反查地址，存進 `locationStore`；
+  下單時把座標帶進訂單，追蹤頁地圖中心與外送員繞圈的圓心都跟著你的位置走。
 - **頁面轉場用 `template.tsx`**：App Router 每次導航會重新 mount template，藉此達到「向上滑入」效果。
 
 ---

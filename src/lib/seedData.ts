@@ -35,7 +35,10 @@ export const HOME_CATEGORIES = [
   "便當",
   "熱炒",
   "炸物",
+  "日式",
   "異國",
+  "美式",
+  "義式",
   "早午餐",
   "飲料甜點",
   "宵夜",
@@ -478,6 +481,133 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
       { name: "可樂", description: "冰可樂解膩", price: 30, category: "飲料" },
     ],
   },
+  {
+    slug: "bake-american-burger",
+    name: "霸克美式漢堡",
+    category: "美式",
+    tagline: "美式漢堡・現煎厚牛肉排",
+    rating: 4.6,
+    review_count: 2380,
+    min_order: 180,
+    delivery_time: "25-35 分鐘",
+    menu: [
+      { name: "經典牛肉堡", description: "4 盎司現煎牛肉排、生菜番茄", price: 130, category: "漢堡" },
+      { name: "雙層起司牛肉堡", description: "雙層牛肉＋融化起司，超滿足", price: 180, category: "漢堡" },
+      { name: "蘑菇培根牛肉堡", description: "炒蘑菇＋脆培根，濃郁多汁", price: 175, category: "漢堡" },
+      { name: "香脆雞腿堡", description: "現炸多汁雞腿排", price: 140, category: "漢堡" },
+      { name: "黃金薯條", description: "現炸粗切薯條", price: 70, category: "配餐" },
+      { name: "酥炸洋蔥圈", description: "一份 6 個，酥脆涮嘴", price: 75, category: "配餐" },
+      { name: "雞塊（6 塊）", description: "外酥內嫩", price: 80, category: "配餐" },
+      { name: "香草奶昔", description: "濃郁香草，邪惡甜", price: 90, category: "飲料" },
+      { name: "可樂", description: "冰涼暢快", price: 35, category: "飲料" },
+    ],
+  },
+  {
+    slug: "napoli-pizza",
+    name: "拿坡里手工披薩",
+    category: "義式",
+    tagline: "手工窯烤披薩・薄脆餅皮",
+    rating: 4.7,
+    review_count: 1920,
+    min_order: 250,
+    delivery_time: "30-45 分鐘",
+    menu: [
+      { name: "瑪格麗特披薩", description: "番茄、莫札瑞拉、羅勒，經典不敗", price: 220, category: "披薩" },
+      { name: "夏威夷披薩", description: "火腿＋鳳梨，甜鹹之爭", price: 260, category: "披薩" },
+      { name: "培根蘑菇披薩", description: "脆培根與蘑菇的香氣", price: 280, category: "披薩" },
+      { name: "海鮮總匯披薩", description: "蝦仁、花枝、淡菜滿滿", price: 320, category: "披薩" },
+      { name: "四種起司披薩", description: "起司控的終極夢想", price: 290, category: "披薩" },
+      { name: "香蒜麵包", description: "烤得金黃的蒜香麵包", price: 80, category: "前菜" },
+      { name: "水牛城炸雞翅", description: "微辣多汁，附藍紋起司醬", price: 160, category: "前菜" },
+      { name: "凱薩沙拉", description: "生菜淋凱薩醬與帕瑪森", price: 120, category: "沙拉" },
+      { name: "義式氣泡飲", description: "清爽解膩", price: 60, category: "飲料" },
+    ],
+  },
+  {
+    slug: "kisen-donburi",
+    name: "極鮮丼飯屋",
+    category: "日式",
+    tagline: "日式丼飯・每日現切生魚片",
+    rating: 4.8,
+    review_count: 3260,
+    min_order: 200,
+    delivery_time: "25-40 分鐘",
+    menu: [
+      { name: "鮭魚親子丼", description: "厚切鮭魚＋鮭魚卵雙重享受", price: 220, category: "丼飯" },
+      { name: "鮪魚丼", description: "肥美赤身鋪滿飯上", price: 240, category: "丼飯" },
+      { name: "海膽干貝丼", description: "海膽與干貝的奢華組合", price: 380, category: "丼飯" },
+      { name: "綜合生魚片丼", description: "五種當日鮮魚生魚片", price: 280, category: "丼飯" },
+      { name: "炙燒鮭魚丼", description: "炙燒到微焦，油脂噴香", price: 250, category: "丼飯" },
+      { name: "鰻魚丼", description: "蒲燒鰻魚淋特製醬汁", price: 320, category: "丼飯" },
+      { name: "茶碗蒸", description: "滑嫩日式蒸蛋", price: 60, category: "小品" },
+      { name: "味噌湯", description: "豆腐海帶味噌湯", price: 30, category: "湯品" },
+      { name: "綠茶", description: "無糖冷泡綠茶", price: 30, category: "飲料" },
+    ],
+  },
+  {
+    slug: "yeshi-steak",
+    name: "夜市平價牛排",
+    category: "美式",
+    tagline: "夜市牛排・鐵板滋滋作響",
+    rating: 4.5,
+    review_count: 2750,
+    min_order: 160,
+    delivery_time: "25-40 分鐘",
+    menu: [
+      { name: "沙朗牛排", description: "鐵板現煎，附麵與蛋", price: 180, category: "牛排" },
+      { name: "菲力牛排", description: "軟嫩菲力，肉控最愛", price: 220, category: "牛排" },
+      { name: "德式豬排", description: "厚切炸豬排淋黑胡椒醬", price: 150, category: "排餐" },
+      { name: "香煎雞腿排", description: "外皮酥香的去骨雞腿", price: 150, category: "排餐" },
+      { name: "鐵板麵（加點）", description: "鐵板上的靈魂配角", price: 40, category: "加點" },
+      { name: "玉米濃湯（免費續）", description: "餐前暖胃必備", price: 0, category: "湯品" },
+      { name: "蘑菇黑胡椒醬加購", description: "醬汁淋好淋滿", price: 20, category: "加購" },
+      { name: "半熟蛋加購", description: "戳破拌牛排超香", price: 15, category: "加購" },
+      { name: "古早味紅茶", description: "無限暢飲的回憶", price: 25, category: "飲料" },
+    ],
+  },
+  {
+    slug: "alley-pasta",
+    name: "巷弄義式麵屋",
+    category: "義式",
+    tagline: "義大利麵・道地南義風味",
+    rating: 4.6,
+    review_count: 1640,
+    min_order: 200,
+    delivery_time: "25-40 分鐘",
+    menu: [
+      { name: "奶油培根義大利麵", description: "濃郁卡邦尼白醬", price: 180, category: "義大利麵" },
+      { name: "青醬雞肉義大利麵", description: "羅勒青醬香氣十足", price: 190, category: "義大利麵" },
+      { name: "茄汁海鮮義大利麵", description: "蝦仁花枝淡菜的酸甜", price: 210, category: "義大利麵" },
+      { name: "松露野菇義大利麵", description: "松露香氣的奢華", price: 220, category: "義大利麵" },
+      { name: "焗烤千層麵", description: "層層肉醬與起司", price: 200, category: "焗烤" },
+      { name: "烤蒜香麵包", description: "金黃酥脆", price: 70, category: "前菜" },
+      { name: "凱薩沙拉", description: "清爽開胃", price: 120, category: "沙拉" },
+      { name: "提拉米蘇", description: "咖啡酒香的經典甜點", price: 110, category: "甜點" },
+      { name: "氣泡水", description: "義式餐桌標配", price: 50, category: "飲料" },
+    ],
+  },
+  {
+    slug: "charcoal-skewer",
+    name: "炭火串燒攤",
+    category: "宵夜",
+    tagline: "深夜串燒・炭火直烤",
+    rating: 4.7,
+    review_count: 3120,
+    min_order: 150,
+    delivery_time: "25-40 分鐘",
+    menu: [
+      { name: "鹽烤雞肉串", description: "炭火逼出油脂，鹹香", price: 45, category: "串燒" },
+      { name: "牛五花串", description: "油花豐富，一口爆汁", price: 60, category: "串燒" },
+      { name: "豬五花串", description: "炭烤到微焦的五花", price: 50, category: "串燒" },
+      { name: "炭烤雞翅", description: "皮脆肉嫩", price: 55, category: "串燒" },
+      { name: "烤香腸", description: "台式香腸炭烤更香", price: 40, category: "串燒" },
+      { name: "烤米血", description: "Q彈米血刷醬", price: 35, category: "串燒" },
+      { name: "杏鮑菇串", description: "多汁杏鮑菇", price: 40, category: "串燒" },
+      { name: "蔥鹽豬五花", description: "蔥花鹽香解膩", price: 60, category: "串燒" },
+      { name: "烤高麗菜", description: "炭烤出甜味的高麗菜", price: 45, category: "蔬菜" },
+      { name: "台灣啤酒", description: "（未成年請勿飲酒）", price: 60, category: "飲料" },
+    ],
+  },
 ];
 
 // ---- 假評論產生（台灣在地口吻、繁體中文） ----
@@ -543,60 +673,177 @@ export function generateSeedReviews(restaurantId: string): Review[] {
   return reviews;
 }
 
-// ---- 圖片（用 loremflickr 依關鍵字抓真實美食照片，做到圖文相符）----
+// ---- 圖片（本地真實美食照，放在 /public/food；做到圖文相符、永不破圖）----
+//
+// 18 種菜色類型，各對應一張下載好的真實美食照（Wikimedia 台灣在地照 + TheMealDB）。
 
-// 每間餐廳對應的英文美食關鍵字（loremflickr 以逗號分隔、需同時符合的 tag）
-const IMG_QUERY: Record<string, string> = {
-  "acai-luroufan": "rice,pork",
-  "laodifang-beef-noodle": "beef,noodle",
+export type FoodType =
+  | "luroufan"
+  | "bento"
+  | "beef-noodle"
+  | "ramen"
+  | "friedchicken"
+  | "chicken-cutlet"
+  | "karaage"
+  | "friedrice"
+  | "katsu-curry"
+  | "thai-curry"
+  | "bao"
+  | "hotpot"
+  | "stirfry"
+  | "veg"
+  | "bubble-tea"
+  | "douhua"
+  | "cake"
+  | "pancake"
+  | "burger"
+  | "pizza"
+  | "sushi"
+  | "steak"
+  | "pasta"
+  | "skewer";
+
+function foodImg(type: FoodType): string {
+  return `/food/${type}.jpg`;
+}
+
+// 每間餐廳的招牌圖（hero / 卡片），同時當作菜色比對不到時的 fallback
+const RESTAURANT_FOOD: Record<string, FoodType> = {
+  "acai-luroufan": "luroufan",
+  "laodifang-beef-noodle": "beef-noodle",
   "sanma-stinky-hotpot": "hotpot",
-  "chiabaomei-guabao": "bun,pork",
-  "jiucengta-stirfry": "chinese,food",
-  "dajipai-fried": "fried,chicken",
-  "yeshi-fried-lab": "fried,food",
+  "chiabaomei-guabao": "bao",
+  "jiucengta-stirfry": "stirfry",
+  "dajipai-fried": "chicken-cutlet",
+  "yeshi-fried-lab": "karaage",
   "chishang-bento": "bento",
-  "fuyuan-veg-bento": "vegetarian,food",
-  "dapaozhu-thai": "thai,food",
-  "curryleaf-japanese": "curry,rice",
-  "oni-korean-chicken": "korean,chicken",
-  "vietpho-stall": "pho",
-  "houpian-toast-lab": "toast,breakfast",
-  "benedict-brunch": "brunch,egg",
-  "boba-institute": "bubble,tea",
-  "douhua-uncle": "dessert,sweet",
-  "dessert-lab": "cake,dessert",
-  "salty-chicken-savior": "chicken,food",
-  "midnight-instant-noodle": "ramen,noodle",
+  "fuyuan-veg-bento": "veg",
+  "dapaozhu-thai": "thai-curry",
+  "curryleaf-japanese": "katsu-curry",
+  "oni-korean-chicken": "friedchicken",
+  "vietpho-stall": "beef-noodle",
+  "houpian-toast-lab": "pancake",
+  "benedict-brunch": "pancake",
+  "boba-institute": "bubble-tea",
+  "douhua-uncle": "douhua",
+  "dessert-lab": "cake",
+  "salty-chicken-savior": "veg",
+  "midnight-instant-noodle": "ramen",
+  "bake-american-burger": "burger",
+  "napoli-pizza": "pizza",
+  "kisen-donburi": "sushi",
+  "yeshi-steak": "steak",
+  "alley-pasta": "pasta",
+  "charcoal-skewer": "skewer",
 };
 
-function qFor(slug: string): string {
-  return IMG_QUERY[slug] ?? "food";
-}
+// 依菜名 + 分類關鍵字判斷菜色類型（順序：特定 → 一般），比對不到就用餐廳招牌圖
+function dishToFoodType(
+  name: string,
+  category: string,
+  fallback: FoodType,
+): FoodType {
+  const s = `${name} ${category}`;
+  const has = (...ks: string[]) => ks.some((k) => s.includes(k));
 
-// 依菜單分類微調關鍵字（飲料/湯/甜點），其餘沿用餐廳料理類型
-function menuKeyword(slug: string, category?: string): string {
-  const c = category ?? "";
-  if (/[飲茶奶汁]|咖啡/.test(c)) return "drink,beverage";
-  if (/湯/.test(c)) return "soup,food";
-  if (/[甜糕餅凍布]|豆花|聖代|舒芙蕾|大福|菓子|提拉|可麗/.test(c))
-    return "dessert,sweet";
-  return qFor(slug);
-}
+  // 特定例外（避免被一般關鍵字誤判，例如 可樂餅 不是可樂）
+  if (has("可樂餅", "薯餅")) return "karaage";
 
-function lockFor(key: string): number {
-  return hashString(key) % 100000;
+  // 飲料（先判；注意不要放會誤傷餐點的字，例如「檸檬」「可樂」已排除特例）
+  if (
+    has(
+      "珍珠", "珍奶", "波霸", "奶茶", "多多", "椰果", "鮮奶", "冬瓜", "蘆薈",
+      "青茶", "四季春", "烏龍奶", "百香", "咖啡", "拿鐵", "可樂", "汽水",
+      "啤酒", "米酒", "豆漿", "麥茶", "綠茶", "酸梅", "甘蔗", "椰子", "柳橙",
+      "玫瑰", "茶飲", "飲料", "滴漏", "荔枝茶", "奶昔", "紅茶", "氣泡",
+    )
+  )
+    return "bubble-tea";
+  // 甜點：豆花/甜湯 vs 蛋糕系（不放「起司」，因為多數是鹹食）
+  if (has("豆花", "仙草", "綠豆", "紅豆", "湯圓", "芋圓", "薑汁", "甜湯", "杏仁豆"))
+    return "douhua";
+  if (
+    has("舒芙蕾", "聖代", "大福", "蛋糕", "提拉米蘇", "布丁", "可麗",
+      "巧克力", "草莓", "甜點", "鬆餅", "熔岩")
+  )
+    return "cake";
+
+  // 西式 / 日式（新增餐廳；先於麵飯類，避免「鐵板麵/丼飯」被誤判）
+  if (has("披薩")) return "pizza";
+  if (has("漢堡", "牛肉堡", "起司堡", "雞堡", "培根堡")) return "burger";
+  if (has("丼", "生魚片", "壽司", "炙燒鮭", "海膽", "鰻魚")) return "sushi";
+  if (has("牛排", "沙朗", "菲力")) return "steak";
+  if (has("義大利麵", "千層麵", "鐵板麵", "卡邦尼", "青醬", "焗烤"))
+    return "pasta";
+  if (has("串", "串燒", "香腸", "米血", "烤雞翅")) return "skewer";
+
+  // 咖哩 / 泰式（先於 飯/便當/炸雞/麵，否則「咖哩飯」會被誤判成便當或炸雞）
+  if (has("打拋", "綠咖哩", "月亮蝦餅", "椒麻", "酸辣", "青木瓜", "泰式", "冬陰"))
+    return "thai-curry";
+  if (has("咖哩")) return "katsu-curry";
+
+  // 鍋物（先於 起司/炸物）
+  if (has("鍋", "臭豆腐", "豬血糕", "鴨血", "部隊")) return "hotpot";
+
+  // 炒飯/炒麵/炒米粉（先於「河粉」，否則 泰式炒河粉 會變牛肉麵湯）
+  if (has("炒飯", "炒米粉", "炒麵", "炒河粉")) return "friedrice";
+  // 麵 / 湯麵
+  if (has("牛肉麵", "牛腩", "半筋", "河粉")) return "beef-noodle";
+  if (has("泡麵", "拉麵", "辛拉", "烏龍", "麵線", "陽春麵", "乾拌麵")) return "ramen";
+
+  // 飯 / 便當
+  if (has("滷肉飯", "魯肉", "控肉", "爌肉", "米糕", "肉燥")) return "luroufan";
+  if (has("排骨", "豬排", "便當", "鯖魚")) return "bento";
+
+  // 雞排 / 炸雞 / 炸物
+  if (has("大雞排", "雞排")) return "chicken-cutlet";
+  if (has("鹽酥", "鹹酥", "唐揚", "雞米花", "雞塊", "炸雞")) return "friedchicken";
+  if (
+    has("甜不辣", "地瓜球", "薯條", "洋蔥圈", "花枝丸", "銀絲卷", "魷魚",
+      "雞屁股", "大腸", "百頁", "炸")
+  )
+    return "karaage";
+
+  // 割包 / 包子
+  if (has("割包", "刈包", "包子", "虎咬豬")) return "bao";
+
+  // 熱炒
+  if (
+    has("三杯", "蒼蠅頭", "宮保", "塔香", "蚵仔煎", "蛤蜊", "快炒", "水蓮",
+      "溪蝦", "茄子", "煎餅", "年糕")
+  )
+    return "stirfry";
+
+  // 早午餐（蛋餅/吐司/班尼迪克等；不用 bare「蛋」避免誤抓 滷蛋/溫泉蛋）
+  if (has("吐司", "蛋餅", "飯糰", "貝果", "班尼迪克", "歐姆", "蘿蔔糕", "厚片"))
+    return "pancake";
+
+  // 蔬菜 / 小菜 / 鹹水雞（含 category 為「蔬菜」者）
+  if (
+    category.includes("蔬菜") ||
+    has("青菜", "高麗菜", "玉米筍", "花椰", "時蔬", "燙", "沙拉", "和風",
+      "春捲", "拼盤")
+  )
+    return "veg";
+
+  // 湯品
+  if (has("湯")) return "ramen";
+
+  return fallback;
 }
 
 export function restaurantImage(slug: string): string {
-  return `https://loremflickr.com/800/600/${qFor(slug)}?lock=${lockFor(slug)}`;
+  return foodImg(RESTAURANT_FOOD[slug] ?? "luroufan");
 }
 
 export function menuItemImage(
   slug: string,
-  index: number,
-  category?: string,
+  name: string,
+  category: string,
 ): string {
-  return `https://loremflickr.com/400/300/${menuKeyword(slug, category)}?lock=${lockFor(`${slug}:${index}`)}`;
+  return foodImg(
+    dishToFoodType(name, category ?? "", RESTAURANT_FOOD[slug] ?? "luroufan"),
+  );
 }
 
 // ---- 把 seed 轉成 DB Row 形狀（離線 fallback 用） ----
@@ -622,7 +869,7 @@ export function seedMenuToRows(r: SeedRestaurant): MenuItem[] {
     name: m.name,
     description: m.description,
     price: m.price,
-    image_url: menuItemImage(r.slug, i, m.category),
+    image_url: menuItemImage(r.slug, m.name, m.category),
     category: m.category,
   }));
 }

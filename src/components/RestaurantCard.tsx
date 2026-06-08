@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import type { Restaurant } from "@/types/database.types";
 import StarRating from "./StarRating";
 import { formatNT } from "@/lib/format";
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 export default function RestaurantCard({
   restaurant,
@@ -14,6 +15,9 @@ export default function RestaurantCard({
   restaurant: Restaurant;
   index?: number;
 }) {
+  const favorited = useFavoritesStore((s) => Boolean(s.ids[restaurant.id]));
+  const toggleFav = useFavoritesStore((s) => s.toggle);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -44,6 +48,17 @@ export default function RestaurantCard({
             <span className="absolute left-3 top-3 rounded-full bg-panda px-2.5 py-1 text-xs font-bold text-white shadow-lg">
               幻想專屬・免運
             </span>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleFav(restaurant.id);
+              }}
+              aria-label={favorited ? "取消收藏" : "加入收藏"}
+              className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/45 text-base backdrop-blur transition hover:scale-110 active:scale-90"
+            >
+              {favorited ? "❤️" : "🤍"}
+            </button>
             <span className="absolute bottom-3 right-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
               {restaurant.delivery_time}
             </span>

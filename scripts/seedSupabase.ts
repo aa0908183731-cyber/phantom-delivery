@@ -58,12 +58,12 @@ async function main() {
     }
     const restaurantId = inserted.id;
 
-    const menuRows = r.menu.map((m, i) => ({
+    const menuRows = r.menu.map((m) => ({
       restaurant_id: restaurantId,
       name: m.name,
       description: m.description,
       price: m.price,
-      image_url: menuItemImage(r.slug, i),
+      image_url: menuItemImage(r.slug, m.name, m.category),
       category: m.category,
     }));
     await supabase.from("menu_items").insert(menuRows);

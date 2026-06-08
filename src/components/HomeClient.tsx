@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { Restaurant } from "@/types/database.types";
 import { HOME_CATEGORIES } from "@/lib/seedData";
 import { useStreak } from "@/lib/useStreak";
+import { useFavoritesStore } from "@/store/favoritesStore";
 import BannerCarousel from "./BannerCarousel";
 import CategoryTabs from "./CategoryTabs";
 import SearchBar from "./SearchBar";
@@ -13,13 +14,19 @@ import CartSidebar from "./CartSidebar";
 
 export default function HomeClient({
   restaurants,
+  searchIndex,
 }: {
   restaurants: Restaurant[];
+  searchIndex: Record<string, string>;
 }) {
   const [category, setCategory] = useState("全部");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("推薦");
+  const [favOnly, setFavOnly] = useState(false);
   const [mounted, setMounted] = useState(false);
   const streak = useStreak();
+  const favIds = useFavoritesStore((s) => s.ids);
+  const favCount = Object.keys(favIds).length;
 
   useEffect(() => setMounted(true), []);
 
@@ -30,11 +37,37 @@ export default function HomeClient({
     return h >= 23 || h < 5;
   }, [mounted]);
 
-  // 分類篩選是真的；搜尋只是裝飾（輸入任何字都顯示全部）
+  // 分類 + 搜尋 + 收藏 + 排序，全部都是真的
   const filtered = useMemo(() => {
-    if (category === "全部") return restaurants;
-    return restaurants.filter((r) => r.category === category);
-  }, [restaurants, category]);
+    let list = restaurants;
+    if (category !== "全部") {
+      list = list.filter((r) => r.category === category);
+    }
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter((r) =>
+        (searchIndex[r.id] ?? r.name.toLowerCase()).includes(q),
+      );
+    }
+    if (favOnly) {
+      list = list.filter((r) => favIds[r.id]);
+    }
+
+    const mins = (t: string | null) => {
+      const m = (t ?? "").match(/\d+/);
+      return m ? parseInt(m[0], 10) : 999;
+    };
+    if (sort === "評分") {
+      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    } else if (sort === "快送") {
+      list = [...list].sort(
+        (a, b) => mins(a.delivery_time) - mins(b.delivery_time),
+      );
+    } else if (sort === "低消") {
+      list = [...list].sort((a, b) => (a.min_order ?? 0) - (b.min_order ?? 0));
+    }
+    return list;
+  }, [restaurants, category, search, searchIndex, favOnly, favIds, sort]);
 
   const greeting = isLateNight
     ? "宵夜只存在於你的想像中 🌙"
@@ -71,9 +104,33 @@ export default function HomeClient({
         />
       </div>
 
+      <div className="mb-3 mt-3 flex items-center gap-2">
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-zinc-700 focus:border-uber focus:outline-none"
+        >
+          <option value="推薦">推薦排序</option>
+          <option value="評分">評分高到低</option>
+          <option value="快送">外送最快</option>
+          <option value="低消">最低消費低</option>
+        </select>
+        <button
+          onClick={() => setFavOnly((v) => !v)}
+          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+            favOnly
+              ? "border-panda bg-panda/10 text-panda"
+              : "border-border bg-surface text-zinc-600"
+          }`}
+        >
+          ❤️ 只看收藏
+          {mounted && favCount > 0 ? `（${favCount}）` : ""}
+        </button>
+      </div>
+
       {search.trim() && (
         <p className="mb-3 text-sm text-zinc-500">
-          顯示「{search.trim()}」的搜尋結果（其實跟沒搜尋一樣啦 😏）
+          「{search.trim()}」找到 {filtered.length} 間店
         </p>
       )}
 
@@ -85,7 +142,11 @@ export default function HomeClient({
 
       {filtered.length === 0 && (
         <p className="py-16 text-center text-zinc-500">
-          這個分類暫時沒有店家，換一個試試？
+          {favOnly
+            ? "還沒收藏任何店家，點卡片右上的 🤍 收藏吧"
+            : search.trim()
+              ? `找不到「${search.trim()}」的店，換個關鍵字試試？`
+              : "這個分類暫時沒有店家，換一個試試？"}
         </p>
       )}
 

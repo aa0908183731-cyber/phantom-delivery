@@ -97,6 +97,53 @@ body {
 .leaflet-control-attribution a {
   color: #3f3f46 !important;
 }
-.rider-trail {
-  filter: drop-shadow(0 0 6px rgba(227, 0, 109, 0.8));
+/* 外送員徽章 + 平滑滑動（每 3 秒一個新點，用 transition 補間） */
+.rider-badge {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  line-height: 1;
+  background: #ffffff;
+  border: 2px solid #e3006d;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px -2px rgba(227, 0, 109, 0.5);
+}
+.leaflet-marker-icon.rider-marker {
+  transition: transform 2.9s linear !important;
+}
+
+/* 你家 pin + 脈動光環 */
+.home-pin {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+.home-emoji {
+  position: relative;
+  z-index: 1;
+  font-size: 26px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+.home-pulse {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: rgba(6, 193, 103, 0.35);
+  animation: home-pulse 2s ease-out infinite;
+}
+@keyframes home-pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }

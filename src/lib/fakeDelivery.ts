@@ -34,29 +34,32 @@ export function distanceMeters(a: LatLng, b: LatLng): number {
   return Math.hypot(dX, dY);
 }
 
-/** 在環帶內隨機產生一個初始外送員座標。 */
-export function initialRiderPosition(): LatLng {
+/** 在環帶內隨機產生一個初始外送員座標（以 dest 為圓心）。 */
+export function initialRiderPosition(dest: LatLng = DESTINATION): LatLng {
   const theta = Math.random() * Math.PI * 2;
   const r = 1800 + Math.random() * 600; // 約 1.8~2.4 km
-  return polarToLatLng(r, theta);
+  return polarToLatLng(r, theta, dest);
 }
 
-function polarToLatLng(r: number, theta: number): LatLng {
+function polarToLatLng(r: number, theta: number, dest: LatLng): LatLng {
   const mX = r * Math.cos(theta);
   const mY = r * Math.sin(theta);
   return {
-    lat: DESTINATION.lat + mY / METERS_PER_DEG_LAT,
-    lng: DESTINATION.lng + mX / metersPerDegLng(DESTINATION.lat),
+    lat: dest.lat + mY / METERS_PER_DEG_LAT,
+    lng: dest.lng + mX / metersPerDegLng(dest.lat),
   };
 }
 
 /**
- * 根據目前座標產生下一個假座標。
+ * 根據目前座標產生下一個假座標（以 dest 為圓心）。
  * 永遠維持在 1~3km 環帶，永遠不靠近終點。
  */
-export function nextRiderPosition(prev: LatLng): LatLng {
-  const mY = (prev.lat - DESTINATION.lat) * METERS_PER_DEG_LAT;
-  const mX = (prev.lng - DESTINATION.lng) * metersPerDegLng(DESTINATION.lat);
+export function nextRiderPosition(
+  prev: LatLng,
+  dest: LatLng = DESTINATION,
+): LatLng {
+  const mY = (prev.lat - dest.lat) * METERS_PER_DEG_LAT;
+  const mX = (prev.lng - dest.lng) * metersPerDegLng(dest.lat);
 
   let r = Math.hypot(mX, mY);
   let theta = Math.atan2(mY, mX);
@@ -67,7 +70,7 @@ export function nextRiderPosition(prev: LatLng): LatLng {
   r += (Math.random() - 0.5) * 260;
   r = clamp(r, MIN_RADIUS_M, MAX_RADIUS_M);
 
-  return polarToLatLng(r, theta);
+  return polarToLatLng(r, theta, dest);
 }
 
 // ---- 外送員身分 ----

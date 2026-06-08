@@ -7,6 +7,7 @@ import {
   randomRiderName,
   randomRiderRating,
   riderAvatarUrl,
+  TAIPEI_CENTER,
 } from "@/lib/fakeDelivery";
 import { DELIVERY_FEE, SERVICE_FEE } from "@/lib/fees";
 
@@ -27,6 +28,9 @@ export interface CreateOrderInput {
   deliveryWhen: string;
   /** 預約時可帶入指定送達時間（ISO）；不給則用隨機假值 */
   etaIso?: string;
+  /** 送達座標（你家）；外送員會繞著它打轉。不給則用台北市中心。 */
+  destLat?: number;
+  destLng?: number;
 }
 
 export interface CreatedOrder {
@@ -46,6 +50,8 @@ export interface CreatedOrder {
   address: string;
   paymentMethod: string;
   deliveryWhen: string;
+  destLat: number;
+  destLng: number;
 }
 
 /**
@@ -61,7 +67,12 @@ export async function createFakeOrder(
   const riderName = randomRiderName();
   const riderRating = randomRiderRating();
   const riderAvatar = riderAvatarUrl(riderName);
-  const start = initialRiderPosition();
+
+  const dest =
+    typeof input.destLat === "number" && typeof input.destLng === "number"
+      ? { lat: input.destLat, lng: input.destLng }
+      : TAIPEI_CENTER;
+  const start = initialRiderPosition(dest);
 
   const deliveryFee = DELIVERY_FEE;
   const serviceFee = SERVICE_FEE;
@@ -114,5 +125,7 @@ export async function createFakeOrder(
     address: input.address,
     paymentMethod: input.paymentMethod,
     deliveryWhen: input.deliveryWhen,
+    destLat: dest.lat,
+    destLng: dest.lng,
   };
 }

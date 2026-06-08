@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import {
 } from "@/store/cartStore";
 import { useOrderStore } from "@/store/orderStore";
 import { useToastStore } from "@/store/toastStore";
+import { useLocationStore } from "@/store/locationStore";
 import { createFakeOrder } from "@/actions/createFakeOrder";
 import { formatNT } from "@/lib/format";
 import TopBar from "@/components/TopBar";
@@ -50,8 +51,16 @@ export default function CartPage() {
   const subtotal = useCartStore((s) => s.subtotal());
   const addOrder = useOrderStore((s) => s.addOrder);
   const show = useToastStore((s) => s.show);
+  const location = useLocationStore((s) => s.location);
+  const locHydrated = useLocationStore((s) => s.hasHydrated);
 
   const [address, setAddress] = useState("");
+
+  // 預填目前選定的外送地址（TopBar 可改成「目前位置」）
+  useEffect(() => {
+    if (locHydrated) setAddress((a) => a || location.address);
+  }, [locHydrated, location.address]);
+
   const [promo, setPromo] = useState("");
   const [payment, setPayment] = useState("credit");
   const [loading, setLoading] = useState(false);
@@ -78,6 +87,8 @@ export default function CartPage() {
         subtotal,
         deliveryWhen: scheduled ? `預約 ${chosenSlot.label}` : "盡快送達",
         etaIso: scheduled ? chosenSlot.iso : undefined,
+        destLat: location.lat,
+        destLng: location.lng,
       });
 
       addOrder({
@@ -95,6 +106,8 @@ export default function CartPage() {
         riderAvatar: order.riderAvatar,
         riderLat: order.riderLat,
         riderLng: order.riderLng,
+        destLat: order.destLat,
+        destLng: order.destLng,
         etaIso: order.etaIso,
         deliveryWhen: order.deliveryWhen,
         createdAt: order.createdAt,

@@ -69,12 +69,16 @@ export default function TrackingPage({
   // 每 3 秒產生新假座標：更新本地、寫回 store、（若有）寫進 Supabase
   useEffect(() => {
     if (!order) return;
+    const dest = {
+      lat: order.destLat ?? DESTINATION.lat,
+      lng: order.destLng ?? DESTINATION.lng,
+    };
     const id = setInterval(() => {
       const cur = riderRef.current ?? {
         lat: order.riderLat,
         lng: order.riderLng,
       };
-      const next = nextRiderPosition(cur);
+      const next = nextRiderPosition(cur, dest);
       riderRef.current = next;
       setRider(next);
       setTrail((t) => [...t, next].slice(-14));
@@ -176,6 +180,11 @@ export default function TrackingPage({
         ? "餐廳備餐中"
         : "訂單已確認";
 
+  const dest = {
+    lat: order.destLat ?? DESTINATION.lat,
+    lng: order.destLng ?? DESTINATION.lng,
+  };
+
   return (
     <>
       <TopBar showBack backHref="/" title="訂單追蹤" />
@@ -183,7 +192,7 @@ export default function TrackingPage({
 
       {/* 地圖 */}
       <div className="relative h-[42dvh] w-full">
-        <TrackingMap rider={rider} destination={DESTINATION} trail={trail} />
+        <TrackingMap rider={rider} destination={dest} trail={trail} />
         <div className="pointer-events-none absolute left-1/2 top-4 z-[500] -translate-x-1/2 rounded-full bg-black/70 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
           🛵 {statusLabel}・預計 {formatTime(order.etaIso)}
         </div>

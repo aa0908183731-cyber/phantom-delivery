@@ -1,4 +1,7 @@
-import { getRestaurants } from "@/actions/getRestaurants";
+import {
+  getRestaurants,
+  getRestaurantSearchIndex,
+} from "@/actions/getRestaurants";
 import TopBar from "@/components/TopBar";
 import HomeClient from "@/components/HomeClient";
 
@@ -6,12 +9,15 @@ import HomeClient from "@/components/HomeClient";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const restaurants = await getRestaurants();
+  const [restaurants, searchIndex] = await Promise.all([
+    getRestaurants(),
+    getRestaurantSearchIndex(),
+  ]);
 
   return (
     <>
       <TopBar showLocation />
-      <HomeClient restaurants={restaurants} />
+      <HomeClient restaurants={restaurants} searchIndex={searchIndex} />
     </>
   );
 }

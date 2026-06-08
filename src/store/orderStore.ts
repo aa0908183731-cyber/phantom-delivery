@@ -20,6 +20,9 @@ export interface StoredOrder {
   riderAvatar: string;
   riderLat: number;
   riderLng: number;
+  /** 送達座標（你家），外送員繞著它打轉 */
+  destLat: number;
+  destLng: number;
   /** 預計送達（純裝飾，永遠不會真的送達） */
   etaIso: string;
   /** 外送時間描述：盡快送達 / 預約 今天 18:30 */
