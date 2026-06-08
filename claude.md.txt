@@ -1,0 +1,13 @@
+# 幻想外送 專案說明
+
+## 這是什麼
+台灣版戒外送成癮模擬平台。完整模擬外送 App 體驗，但食物永遠不會來。
+
+## 重要規則
+- fake_orders 的 status 永遠不能變成 delivered
+- 不能串接任何真實付款 API
+- SUPABASE_SERVICE_ROLE_KEY 只能在 Server Action 使用
+- README.md 是 Single Source of Truth，每完成一個步驟立刻更新
+
+## 開發順序
+參考 README.md 的功能清單，由上往下依序完成，打勾後再繼續下一項
