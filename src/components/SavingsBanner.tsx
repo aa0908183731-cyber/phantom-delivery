@@ -32,17 +32,17 @@ export default function SavingsBanner() {
     >
       <Link
         href="/stats"
-        className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 transition hover:bg-emerald-100/70"
+        className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 transition hover:bg-emerald-100/70 dark:border-emerald-900/60 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40"
       >
         <span className="text-2xl">🐷</span>
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-emerald-800">
+          <p className="text-sm text-emerald-800 dark:text-emerald-200">
             你靠幻想外送省下了{" "}
-            <span className="font-display text-base font-extrabold text-emerald-600">
+            <span className="font-display text-base font-extrabold text-emerald-600 dark:text-emerald-400">
               {formatNT(saved)}
             </span>
           </p>
-          <p className="text-xs text-emerald-700/70">
+          <p className="text-xs text-emerald-700/70 dark:text-emerald-300/70">
             已幻想 {count} 次，一塊錢都沒真的花掉 ・ 看戒斷成績 →
           </p>
         </div>

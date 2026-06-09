@@ -114,7 +114,7 @@ export default function HomeClient({
             exit={{ opacity: 0, height: 0 }}
             className="mb-3 overflow-hidden"
           >
-            <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-700">
+            <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-700 dark:border-amber-900/60 dark:bg-amber-900/25 dark:text-amber-300">
               你已經連續幻想外送 {streak} 天了 🏆 你的荷包感謝你
             </div>
           </motion.div>

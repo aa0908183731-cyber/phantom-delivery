@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 用 <html> 的 .dark class 觸發 dark: 變體（而非系統偏好） */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ── 幻想外送 設計 token（Tailwind v4 @theme）── */
 @theme {
   --color-bg: #f6f6f7;

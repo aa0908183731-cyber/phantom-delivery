@@ -109,16 +109,16 @@ export default function StatsPage() {
             <motion.section
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="rounded-3xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-surface p-6 text-center"
+              className="rounded-3xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-surface p-6 text-center dark:border-emerald-900/60 dark:from-emerald-900/25"
             >
               <p className="text-5xl">🐷</p>
-              <p className="mt-3 text-sm text-emerald-700/80">
+              <p className="mt-3 text-sm text-emerald-700/80 dark:text-emerald-300/80">
                 靠幻想外送，你總共省下了
               </p>
-              <p className="font-display text-4xl font-black text-emerald-600">
+              <p className="font-display text-4xl font-black text-emerald-600 dark:text-emerald-400">
                 {formatNT(stats.saved)}
               </p>
-              <p className="mt-1 text-xs text-emerald-700/60">
+              <p className="mt-1 text-xs text-emerald-700/60 dark:text-emerald-300/60">
                 （都是沒真的花掉的錢）
               </p>
               <button
@@ -161,7 +161,7 @@ export default function StatsPage() {
                     key={a.label}
                     className={`rounded-2xl border p-3 text-center transition ${
                       a.unlocked
-                        ? "border-amber-300 bg-amber-50"
+                        ? "border-amber-300 bg-amber-50 dark:border-amber-900/60 dark:bg-amber-900/20"
                         : "border-border bg-surface-2 opacity-60"
                     }`}
                   >

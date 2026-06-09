@@ -214,7 +214,7 @@ export default function TrackingPage({
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+              className="flex items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-900/60 dark:bg-amber-900/25 dark:text-amber-300"
             >
               <span>你還餓嗎？還是已經不餓了？</span>
               <button
@@ -222,7 +222,7 @@ export default function TrackingPage({
                   setShowHungry(false);
                   setHungryDismissed(true);
                 }}
-                className="shrink-0 text-amber-600/70 hover:text-amber-700"
+                className="shrink-0 text-amber-600/70 hover:text-amber-700 dark:text-amber-400/70 dark:hover:text-amber-300"
               >
                 ✕
               </button>
