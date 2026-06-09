@@ -1,7 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import L from "leaflet";
 import {
   MapContainer,
@@ -10,23 +10,39 @@ import {
   Polyline,
   Circle,
   Tooltip,
+  useMap,
 } from "react-leaflet";
 import type { LatLng } from "@/lib/fakeDelivery";
 
 export interface RiderDot {
   id: string;
   pos: LatLng;
-  trail: LatLng[];
+  origin: LatLng;
+  route: LatLng[];
   label: string;
 }
 
-/** 一次顯示很多位外送員，全部繞著你家打轉（誰都不會到）。 */
+function FitAll({ points }: { points: LatLng[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (points.length < 2) return;
+    map.fitBounds(L.latLngBounds(points.map((p) => [p.lat, p.lng])), {
+      padding: [44, 44],
+      animate: false,
+    });
+  }, [map, points]);
+  return null;
+}
+
+/** 一次顯示很多位外送員，全部沿著各自路線繞向你家（誰都不會到）。 */
 export default function LiveRidersMap({
   riders,
   destination,
+  dark = false,
 }: {
   riders: RiderDot[];
   destination: LatLng;
+  dark?: boolean;
 }) {
   const homeIcon = useMemo(
     () =>
@@ -38,7 +54,6 @@ export default function LiveRidersMap({
       }),
     [],
   );
-
   const riderIcon = useMemo(
     () =>
       L.divIcon({
@@ -49,26 +64,44 @@ export default function LiveRidersMap({
       }),
     [],
   );
+  const restoIcon = useMemo(
+    () =>
+      L.divIcon({
+        className: "",
+        html: `<div class="resto-dot">🏪</div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+      }),
+    [],
+  );
+
+  const tileUrl = dark
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
+  const fitPoints = [destination, ...riders.map((r) => r.origin)];
 
   return (
     <MapContainer
       center={[destination.lat, destination.lng]}
-      zoom={14}
+      zoom={13}
       scrollWheelZoom={false}
       zoomControl={false}
       className="h-full w-full"
       attributionControl
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        key={dark ? "dark" : "light"}
+        url={tileUrl}
         attribution="&copy; OpenStreetMap &copy; CARTO"
         subdomains="abcd"
         maxZoom={20}
       />
+      <FitAll points={fitPoints} />
 
       <Circle
         center={[destination.lat, destination.lng]}
-        radius={180}
+        radius={150}
         pathOptions={{
           color: "#06c167",
           fillColor: "#06c167",
@@ -79,19 +112,19 @@ export default function LiveRidersMap({
 
       {riders.map((r) => (
         <Fragment key={r.id}>
-          {r.trail.length > 1 && (
+          {r.route.length > 1 && (
             <Polyline
-              positions={r.trail.map((p) => [p.lat, p.lng] as [number, number])}
+              positions={r.route.map((p) => [p.lat, p.lng] as [number, number])}
               pathOptions={{
-                color: "#e3006d",
-                weight: 3.5,
-                opacity: 0.5,
+                color: dark ? "#e5e7eb" : "#1f2430",
+                weight: 3,
+                opacity: 0.45,
                 lineCap: "round",
                 lineJoin: "round",
-                dashArray: "1 10",
               }}
             />
           )}
+          <Marker position={[r.origin.lat, r.origin.lng]} icon={restoIcon} />
           <Marker position={[r.pos.lat, r.pos.lng]} icon={riderIcon}>
             <Tooltip
               direction="top"

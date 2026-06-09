@@ -20,7 +20,41 @@
 }
 
 :root {
+  color-scheme: light;
+}
+
+/* ── 深色模式（在 <html> 加 .dark 觸發）── */
+html.dark {
   color-scheme: dark;
+  --color-bg: #0d0d10;
+  --color-surface: #1a1a1f;
+  --color-surface-2: #26262d;
+  --color-border: #313139;
+}
+html.dark body {
+  color: #ededf0;
+}
+/* App 多用 text-zinc-*，深色時整體反相到可讀的淺灰 */
+html.dark .text-zinc-900 {
+  color: #f4f4f5;
+}
+html.dark .text-zinc-800 {
+  color: #e7e7ec;
+}
+html.dark .text-zinc-700 {
+  color: #d6d6dd;
+}
+html.dark .text-zinc-600 {
+  color: #bcbcc6;
+}
+html.dark .text-zinc-500 {
+  color: #9c9ca8;
+}
+html.dark .text-zinc-400 {
+  color: #80808c;
+}
+html.dark .text-zinc-300 {
+  color: #6c6c78;
 }
 
 html,
@@ -97,6 +131,16 @@ body {
 .leaflet-control-attribution a {
   color: #3f3f46 !important;
 }
+html.dark .leaflet-container {
+  background: #15151a;
+}
+html.dark .leaflet-control-attribution {
+  background: rgba(20, 20, 24, 0.78) !important;
+  color: #a1a1aa !important;
+}
+html.dark .leaflet-control-attribution a {
+  color: #c4c4cc !important;
+}
 /* 外送員徽章 + 平滑滑動（每 3 秒一個新點，用 transition 補間） */
 .rider-badge {
   display: grid;
@@ -112,6 +156,40 @@ body {
 }
 .leaflet-marker-icon.rider-marker {
   transition: transform 2.9s linear !important;
+}
+
+/* 餐廳（路線起點）圖釘 */
+.resto-pin {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+  line-height: 1;
+  background: #ffffff;
+  border: 2px solid #1f2430;
+  border-radius: 9999px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+}
+html.dark .resto-pin {
+  background: #1a1a1f;
+  border-color: #e5e7eb;
+}
+.resto-dot {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  line-height: 1;
+  background: #ffffff;
+  border: 1.5px solid #1f2430;
+  border-radius: 9999px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+html.dark .resto-dot {
+  background: #1a1a1f;
+  border-color: #d4d4d8;
 }
 
 /* 多家一起追蹤時，外送員上方的小店名標籤 */

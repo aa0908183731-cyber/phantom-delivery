@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useOrderStore } from "@/store/orderStore";
 import { useStreak } from "@/lib/useStreak";
+import { useToastStore } from "@/store/toastStore";
 import { formatNT } from "@/lib/format";
+import { shareStatsCard } from "@/lib/shareCard";
 import TopBar from "@/components/TopBar";
 
 interface Achievement {
@@ -19,6 +21,8 @@ export default function StatsPage() {
   const hasHydrated = useOrderStore((s) => s.hasHydrated);
   const orders = useOrderStore((s) => s.orders);
   const streak = useStreak();
+  const showToast = useToastStore((s) => s.show);
+  const [sharing, setSharing] = useState(false);
 
   const stats = useMemo(() => {
     const list = Object.values(orders);
@@ -64,6 +68,23 @@ export default function StatsPage() {
   ];
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
 
+  async function onShare() {
+    setSharing(true);
+    try {
+      const r = await shareStatsCard({
+        savedText: formatNT(stats.saved),
+        count: stats.count,
+        streak,
+        unlocked: unlockedCount,
+      });
+      if (r === "downloaded") showToast("已下載成績卡圖片 🖼️", { emoji: "📤" });
+      else if (r === "copied") showToast("已複製分享文字 📋", { emoji: "📤" });
+      else if (r === "none") showToast("這個裝置不支援分享 🥲", { emoji: "📤" });
+    } finally {
+      setSharing(false);
+    }
+  }
+
   return (
     <>
       <TopBar showBack title="戒斷成績單" />
@@ -100,6 +121,13 @@ export default function StatsPage() {
               <p className="mt-1 text-xs text-emerald-700/60">
                 （都是沒真的花掉的錢）
               </p>
+              <button
+                onClick={onShare}
+                disabled={sharing}
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-uber px-5 py-2.5 text-sm font-bold text-black transition hover:brightness-105 active:scale-95 disabled:opacity-60"
+              >
+                {sharing ? "產生中…" : "📤 分享成績卡"}
+              </button>
             </motion.section>
 
             {/* 數據格 */}

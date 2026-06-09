@@ -15,8 +15,11 @@ export const TAIPEI_CENTER: LatLng = { lat: 25.033, lng: 121.5654 };
 /** 你家（目的地）。外送員永遠到不了這裡。 */
 export const DESTINATION: LatLng = TAIPEI_CENTER;
 
-const MIN_RADIUS_M = 1000; // 1 公里
-const MAX_RADIUS_M = 3000; // 3 公里
+// 外送員「在你附近徘徊」的範圍：永遠到不了，但看起來快到了（像 Uber Eats）
+const MIN_RADIUS_M = 280;
+const MAX_RADIUS_M = 1400;
+const HOVER_TARGET_M = 600; // 慢慢被拉回 ~600m，看起來一直「快到了」
+const RESTAURANT_RING_M = 2300; // 餐廳（路線起點）離你約 2.3km
 const METERS_PER_DEG_LAT = 111_320;
 
 function metersPerDegLng(lat: number): number {
@@ -37,8 +40,52 @@ export function distanceMeters(a: LatLng, b: LatLng): number {
 /** 在環帶內隨機產生一個初始外送員座標（以 dest 為圓心）。 */
 export function initialRiderPosition(dest: LatLng = DESTINATION): LatLng {
   const theta = Math.random() * Math.PI * 2;
-  const r = 1800 + Math.random() * 600; // 約 1.8~2.4 km
+  const r = 900 + Math.random() * 500; // 約 0.9~1.4 km（出發後就在附近徘徊）
   return polarToLatLng(r, theta, dest);
+}
+
+function seedNum(str: string): number {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+/** 依訂單 id 穩定地算出「餐廳位置」（路線起點），離你約 2.3km。 */
+export function riderOrigin(seed: string, dest: LatLng = DESTINATION): LatLng {
+  const theta = ((seedNum(seed) % 3600) / 3600) * Math.PI * 2;
+  return polarToLatLng(RESTAURANT_RING_M, theta, dest);
+}
+
+/** 把點 p 沿著 origin→dest 的垂直方向平移 meters 公尺（讓路線有點彎、像馬路）。 */
+function offsetPerp(
+  p: LatLng,
+  origin: LatLng,
+  dest: LatLng,
+  meters: number,
+): LatLng {
+  const mY = (dest.lat - origin.lat) * METERS_PER_DEG_LAT;
+  const mX = (dest.lng - origin.lng) * metersPerDegLng(dest.lat);
+  const len = Math.hypot(mX, mY) || 1;
+  const px = -mY / len;
+  const py = mX / len;
+  return {
+    lat: p.lat + (py * meters) / METERS_PER_DEG_LAT,
+    lng: p.lng + (px * meters) / metersPerDegLng(dest.lat),
+  };
+}
+
+function lerpLatLng(a: LatLng, b: LatLng, t: number): LatLng {
+  return { lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t };
+}
+
+/** 餐廳→你家的「路線」（含兩個彎點，畫成像 Uber Eats 的導航線）。 */
+export function routePoints(origin: LatLng, dest: LatLng): LatLng[] {
+  return [
+    origin,
+    offsetPerp(lerpLatLng(origin, dest, 0.38), origin, dest, 280),
+    offsetPerp(lerpLatLng(origin, dest, 0.72), origin, dest, -200),
+    dest,
+  ];
 }
 
 function polarToLatLng(r: number, theta: number, dest: LatLng): LatLng {
@@ -64,10 +111,10 @@ export function nextRiderPosition(
   let r = Math.hypot(mX, mY);
   let theta = Math.atan2(mY, mX);
 
-  // 主要朝逆時針漂移（繞圈），加上隨機抖動。
-  theta += 0.16 + (Math.random() - 0.5) * 0.28;
-  // 半徑小幅隨機，但永遠夾在環帶內。
-  r += (Math.random() - 0.5) * 260;
+  // 繞著你家逆時針漂移（像在附近找路 / 找車位）。
+  theta += 0.14 + (Math.random() - 0.5) * 0.3;
+  // 半徑慢慢被拉回 ~600m（看起來一直「快到了」），再加抖動，但永遠不進入終點。
+  r += (HOVER_TARGET_M - r) * 0.06 + (Math.random() - 0.5) * 240;
   r = clamp(r, MIN_RADIUS_M, MAX_RADIUS_M);
 
   return polarToLatLng(r, theta, dest);

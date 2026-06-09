@@ -10,6 +10,7 @@ import {
   DEFAULT_LOCATION,
 } from "@/store/locationStore";
 import { reverseGeocode } from "@/lib/geocode";
+import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar({
   showBack = false,
@@ -146,31 +147,33 @@ export default function TopBar({
           </div>
         )}
 
-        {showLocation && (
-          <Link
-            href="/stats"
-            aria-label="戒斷成績"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-lg transition hover:bg-surface-2"
-          >
-            📊
-          </Link>
-        )}
-
-        {showLocation && (
-          <Link
-            href="/orders"
-            aria-label="我的訂單"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-lg transition hover:bg-surface-2"
-          >
-            🧾
-          </Link>
-        )}
-
         {title && (
           <h1 className="truncate text-base font-semibold text-zinc-900">
             {title}
           </h1>
         )}
+
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          {showLocation && (
+            <Link
+              href="/stats"
+              aria-label="戒斷成績"
+              className="grid h-9 w-9 place-items-center rounded-full text-lg transition hover:bg-surface-2"
+            >
+              📊
+            </Link>
+          )}
+          {showLocation && (
+            <Link
+              href="/orders"
+              aria-label="我的訂單"
+              className="grid h-9 w-9 place-items-center rounded-full text-lg transition hover:bg-surface-2"
+            >
+              🧾
+            </Link>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

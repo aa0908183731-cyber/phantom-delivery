@@ -8,8 +8,11 @@ import { useOrderStore } from "@/store/orderStore";
 import {
   DESTINATION,
   nextRiderPosition,
+  riderOrigin,
+  routePoints,
   type LatLng,
 } from "@/lib/fakeDelivery";
+import { useIsDark } from "@/lib/useIsDark";
 import { supabase } from "@/lib/supabase";
 import { formatNT, formatTime } from "@/lib/format";
 import TopBar from "@/components/TopBar";
@@ -40,8 +43,8 @@ export default function TrackingPage({
   const updateRider = useOrderStore((s) => s.updateRider);
 
   const [rider, setRider] = useState<LatLng | null>(null);
-  const [trail, setTrail] = useState<LatLng[]>([]);
   const riderRef = useRef<LatLng | null>(null);
+  const dark = useIsDark();
 
   const [now, setNow] = useState(() => Date.now());
   const [showHungry, setShowHungry] = useState(false);
@@ -56,7 +59,6 @@ export default function TrackingPage({
       const init = { lat: order.riderLat, lng: order.riderLng };
       riderRef.current = init;
       setRider(init);
-      setTrail([init]);
     }
   }, [order]);
 
@@ -81,7 +83,6 @@ export default function TrackingPage({
       const next = nextRiderPosition(cur, dest);
       riderRef.current = next;
       setRider(next);
-      setTrail((t) => [...t, next].slice(-14));
       updateRider(order.id, next.lat, next.lng);
 
       if (supabase) {
@@ -128,7 +129,6 @@ export default function TrackingPage({
             const p = { lat: n.rider_lat, lng: n.rider_lng };
             riderRef.current = p;
             setRider(p);
-            setTrail((t) => [...t, p].slice(-14));
           }
         },
       )
@@ -184,6 +184,8 @@ export default function TrackingPage({
     lat: order.destLat ?? DESTINATION.lat,
     lng: order.destLng ?? DESTINATION.lng,
   };
+  const origin = riderOrigin(order.id, dest);
+  const route = routePoints(origin, dest);
 
   return (
     <>
@@ -192,7 +194,13 @@ export default function TrackingPage({
 
       {/* 地圖 */}
       <div className="relative h-[42dvh] w-full">
-        <TrackingMap rider={rider} destination={dest} trail={trail} />
+        <TrackingMap
+          rider={rider}
+          destination={dest}
+          origin={origin}
+          route={route}
+          dark={dark}
+        />
         <div className="pointer-events-none absolute left-1/2 top-4 z-[500] -translate-x-1/2 rounded-full bg-black/70 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
           🛵 {statusLabel}・預計 {formatTime(order.etaIso)}
         </div>
