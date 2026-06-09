@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_TC, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Toaster from "@/components/Toaster";
+import PwaProvider from "@/components/PwaProvider";
 
 const notoSansTC = Noto_Sans_TC({
   subsets: ["latin"],
@@ -21,12 +22,23 @@ export const metadata: Metadata = {
   title: "幻想外送 🛵 — 反正食物也不會來",
   description:
     "台灣版戒外送成癮模擬平台。完整模擬點外送的儀式感，但餐點永遠不會送到。不花錢、不攝取熱量，只享受那幾分鐘。",
+  applicationName: "幻想外送",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "幻想外送",
+  },
+  icons: {
+    icon: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/apple-icon-180.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f0f0f",
+  themeColor: "#e3006d",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -39,6 +51,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <PwaProvider />
       </body>
     </html>
   );

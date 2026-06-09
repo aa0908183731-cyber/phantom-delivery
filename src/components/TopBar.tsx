@@ -148,6 +148,16 @@ export default function TopBar({
 
         {showLocation && (
           <Link
+            href="/stats"
+            aria-label="戒斷成績"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-lg transition hover:bg-surface-2"
+          >
+            📊
+          </Link>
+        )}
+
+        {showLocation && (
+          <Link
             href="/orders"
             aria-label="我的訂單"
             className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-lg transition hover:bg-surface-2"

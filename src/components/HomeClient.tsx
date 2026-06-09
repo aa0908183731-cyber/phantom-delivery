@@ -1,16 +1,28 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Restaurant } from "@/types/database.types";
 import { HOME_CATEGORIES } from "@/lib/seedData";
 import { useStreak } from "@/lib/useStreak";
 import { useFavoritesStore } from "@/store/favoritesStore";
+import { useToastStore } from "@/store/toastStore";
 import BannerCarousel from "./BannerCarousel";
 import CategoryTabs from "./CategoryTabs";
 import SearchBar from "./SearchBar";
 import RestaurantCard from "./RestaurantCard";
 import CartSidebar from "./CartSidebar";
+import SavingsBanner from "./SavingsBanner";
+
+// 心情點餐：每種心情對應一組分類，點了就從裡面隨機挑一家
+const MOODS: { label: string; emoji: string; cats: string[] }[] = [
+  { label: "嘴饞", emoji: "🍗", cats: ["炸物", "美式", "熱炒"] },
+  { label: "宵夜", emoji: "🌙", cats: ["宵夜", "炸物", "熱炒", "燒肉"] },
+  { label: "療癒甜點", emoji: "🍰", cats: ["飲料甜點", "冰品"] },
+  { label: "異國風", emoji: "🌏", cats: ["異國", "日式", "港式", "印度", "墨西哥", "義式"] },
+  { label: "在地台味", emoji: "🍚", cats: ["台式", "便當"] },
+];
 
 export default function HomeClient({
   restaurants,
@@ -24,11 +36,26 @@ export default function HomeClient({
   const [sort, setSort] = useState("推薦");
   const [favOnly, setFavOnly] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
   const streak = useStreak();
   const favIds = useFavoritesStore((s) => s.ids);
   const favCount = Object.keys(favIds).length;
+  const showToast = useToastStore((s) => s.show);
 
   useEffect(() => setMounted(true), []);
+
+  // 幫我選：從候選餐廳隨機挑一家直接進店
+  function fantasizeRandom(pool: Restaurant[], label?: string) {
+    if (pool.length === 0) {
+      showToast("這個範圍沒有店家可選 🥲", { emoji: "🎲" });
+      return;
+    }
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    showToast(`${label ? label + "：" : "就決定是"}「${pick.name}」了！🎲`, {
+      emoji: "🎯",
+    });
+    router.push(`/restaurant/${pick.id}`);
+  }
 
   // 深夜彩蛋（彩蛋 3）：23:00–05:00
   const isLateNight = useMemo(() => {
@@ -75,6 +102,9 @@ export default function HomeClient({
 
   return (
     <main className="mx-auto max-w-3xl px-4 pb-28 pt-4">
+      {/* 幻想存錢筒：省下的錢 */}
+      <SavingsBanner />
+
       {/* 連續天數成就 banner（彩蛋 5） */}
       <AnimatePresence>
         {mounted && streak >= 3 && (
@@ -126,6 +156,37 @@ export default function HomeClient({
           ❤️ 只看收藏
           {mounted && favCount > 0 ? `（${favCount}）` : ""}
         </button>
+      </div>
+
+      {/* 選擇障礙救星：幫我選 + 心情點餐 */}
+      <div className="mb-4 rounded-2xl border border-border bg-surface p-3">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-semibold text-zinc-800">
+            選擇障礙？讓幻想幫你決定 🎯
+          </p>
+          <button
+            onClick={() => fantasizeRandom(filtered)}
+            className="shrink-0 rounded-full bg-uber px-4 py-1.5 text-sm font-bold text-black transition hover:brightness-105 active:scale-95"
+          >
+            🎲 幫我選
+          </button>
+        </div>
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          {MOODS.map((m) => (
+            <button
+              key={m.label}
+              onClick={() =>
+                fantasizeRandom(
+                  restaurants.filter((r) => m.cats.includes(r.category)),
+                  m.label,
+                )
+              }
+              className="rounded-full border border-border bg-surface-2 px-3 py-1.5 text-sm text-zinc-700 transition hover:border-uber hover:text-uber active:scale-95"
+            >
+              {m.emoji} {m.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {search.trim() && (
