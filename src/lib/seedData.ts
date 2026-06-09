@@ -882,7 +882,16 @@ export type FoodType =
   | "shavedice"
   | "donut"
   | "bibimbap"
-  | "kimchi";
+  | "kimchi"
+  // 詳細圖文修正：炒麵≠炒飯、飯糰、甜不辣、青木瓜沙拉、蘿蔔糕、布丁、花枝、地瓜球
+  | "friednoodle"
+  | "riceball"
+  | "tempura"
+  | "papayasalad"
+  | "radishcake"
+  | "pudding"
+  | "seafood"
+  | "sweetpotato";
 
 // 這些「單一主題店容易整排重複」的類型各備有第二張照片（檔名加 2），
 // 依菜名雜湊輪流使用，讓火鍋店 / 串燒店 / 丼飯店…點進去不會整排同一張圖。
@@ -976,8 +985,9 @@ function dishToFoodType(
   )
     return "sweetsoup";
   if (has("舒芙蕾", "鬆餅")) return "waffle";
+  if (has("布丁", "布蕾", "奶酪")) return "pudding"; // 先於 蛋糕（焦糖布丁≠蛋糕）
   if (
-    has("蛋糕", "提拉米蘇", "熔岩", "聖代", "大福", "布丁", "可麗",
+    has("蛋糕", "提拉米蘇", "熔岩", "聖代", "大福", "可麗",
       "巧克力", "草莓", "莓果", "焦糖", "甜點")
   )
     return "cake";
@@ -996,10 +1006,13 @@ function dishToFoodType(
   if (has("捲餅", "burrito")) return "burrito";
   if (has("玉米片", "nachos")) return "nachos";
   if (has("月亮蝦餅", "蝦餅")) return "shrimpcake"; // 先於 泰式
+  if (has("青木瓜", "木瓜沙拉")) return "papayasalad"; // 先於 泰式（涼拌青木瓜是沙拉）
   if (has("法國麵包", "越式法國")) return "banhmi"; // 先於 河粉/便當
 
-  // 3) 炒飯 / 炒麵 / 炒河粉（先於 泰式 / 河粉，否則 泰式炒河粉 會變綠咖哩或湯麵）
-  if (has("炒飯", "炒米粉", "炒麵", "炒河粉", "什錦炒")) return "friedrice";
+  // 3) 炒飯 vs 炒麵（炒麵/炒米粉/炒河粉 是麵，不該用炒飯圖；先於 泰式 / 河粉）
+  if (has("炒飯")) return "friedrice";
+  if (has("炒米粉", "炒麵", "炒河粉", "什錦炒", "炒冬粉", "炒粄條", "炒粿條"))
+    return "friednoodle";
 
   // 4) 西式 / 日式（先於麵飯類，避免「鐵板麵 / 丼飯」被誤判）
   if (has("披薩")) return "pizza";
@@ -1010,8 +1023,8 @@ function dishToFoodType(
     return "pasta";
   if (has("串", "串燒", "香腸", "米血", "烤雞翅", "五花")) return "skewer";
 
-  // 5) 咖哩 / 泰式（先於 飯/便當/炸雞/麵；月亮蝦餅已在前面歸 shrimpcake）
-  if (has("打拋", "綠咖哩", "椒麻", "酸辣", "青木瓜", "泰式", "冬陰"))
+  // 5) 咖哩 / 泰式（先於 飯/便當/炸雞/麵；月亮蝦餅→shrimpcake、青木瓜→papayasalad）
+  if (has("打拋", "綠咖哩", "椒麻", "酸辣", "泰式", "冬陰"))
     return "thai-curry";
   if (has("咖哩")) return "katsu-curry";
 
@@ -1025,6 +1038,9 @@ function dishToFoodType(
   // 滷味小菜（滷牛腱 / 嘴邊肉）；菇類（杏鮑菇 等，修正圖文不符）
   if (has("滷牛腱", "嘴邊肉", "滷味", "滷大腸")) return "luwei";
   if (has("杏鮑菇", "金針菇", "鴻喜菇", "香菇", "秀珍菇")) return "mushroom";
+  // 海鮮（花枝 / 魷魚，但「花枝丸」是貢丸類歸炸物）
+  if (has("魷魚", "透抽", "軟絲", "中卷") || (has("花枝") && !has("花枝丸")))
+    return "seafood";
 
   // 8) 鹹湯（甜湯 / 酒釀湯 / 酸辣湯 / 酸梅湯 已在前面攔截，剩下的 湯 都是鹹湯）
   if (has("湯")) return "soup";
@@ -1056,17 +1072,18 @@ function dishToFoodType(
   )
     return "stirfry";
 
-  // 14) 雞排 / 炸雞 / 炸物
+  // 14) 雞排 / 炸雞 / 炸物（甜不辣→天婦羅圖、地瓜球→地瓜球圖，修正圖文）
   if (has("雞排")) return "chicken-cutlet";
   if (has("鹽酥", "鹹酥", "唐揚", "雞米花", "雞塊", "炸雞")) return "friedchicken";
-  if (
-    has("甜不辣", "地瓜球", "花枝丸", "銀絲卷", "魷魚", "雞屁股", "大腸", "炸")
-  )
-    return "karaage";
+  if (has("甜不辣", "黑輪", "天婦羅", "甜不辣")) return "tempura";
+  if (has("地瓜球")) return "sweetpotato";
+  if (has("花枝丸", "銀絲卷", "雞屁股", "大腸", "炸")) return "karaage";
 
-  // 15) 早午餐：吐司 / 厚片 / 貝果 → 烤吐司；蛋餅 / 飯糰 / 班尼迪克 → 煎食
+  // 15) 早午餐：吐司→烤吐司；飯糰→飯糰圖；蘿蔔糕→蘿蔔糕圖；蛋餅/班尼迪克→煎食
+  if (has("飯糰")) return "riceball";
+  if (has("蘿蔔糕")) return "radishcake";
   if (has("吐司", "厚片", "貝果")) return "toast";
-  if (has("蛋餅", "飯糰", "蘿蔔糕", "班尼迪克", "歐姆", "蔥抓")) return "pancake";
+  if (has("蛋餅", "班尼迪克", "歐姆", "蔥抓")) return "pancake";
 
   // 16) 鹹水雞 / 白斬雞（雞肉部位）→ 白切雞盤；純蔬菜才走 veg
   // 用「綜合拼盤」而非裸「拼盤」，免得燒肉店的「時蔬拼盤」被誤判
