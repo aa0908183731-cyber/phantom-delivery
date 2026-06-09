@@ -39,8 +39,13 @@ export const HOME_CATEGORIES = [
   "異國",
   "美式",
   "義式",
+  "港式",
+  "印度",
+  "墨西哥",
+  "燒肉",
   "早午餐",
   "飲料甜點",
+  "冰品",
   "宵夜",
 ] as const;
 
@@ -608,6 +613,135 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
       { name: "台灣啤酒", description: "（未成年請勿飲酒）", price: 60, category: "飲料" },
     ],
   },
+  {
+    slug: "tim-dimsum",
+    name: "添好運港式點心",
+    category: "港式",
+    tagline: "港式飲茶・一盅兩件",
+    rating: 4.7,
+    review_count: 4120,
+    min_order: 200,
+    delivery_time: "30-45 分鐘",
+    menu: [
+      { name: "晶瑩鮮蝦餃（四顆）", description: "薄皮裹整隻鮮蝦，港點之王", price: 90, category: "點心" },
+      { name: "干貝燒賣皇（四顆）", description: "豬肉蝦仁加干貝，鮮味爆棚", price: 85, category: "點心" },
+      { name: "豉汁蒸鳳爪", description: "軟糯入味的經典飲茶", price: 70, category: "點心" },
+      { name: "鮮蝦腸粉", description: "滑嫩腸粉淋上甜豉油", price: 80, category: "點心" },
+      { name: "流沙包（三入）", description: "爆漿鹹蛋黃奶黃餡", price: 75, category: "點心" },
+      { name: "蜜汁叉燒飯", description: "炭燒蜜汁叉燒鋪滿白飯", price: 130, category: "燒臘飯" },
+      { name: "港式燒臘雙拼飯", description: "油雞＋燒肉雙拼，附例湯", price: 150, category: "燒臘飯" },
+      { name: "香煎蘿蔔糕（三塊）", description: "臘味蘿蔔糕煎到金黃", price: 70, category: "點心" },
+      { name: "楊枝甘露", description: "芒果西米露淋上柚子", price: 80, category: "甜點" },
+      { name: "港式絲襪奶茶", description: "濃滑奶茶，回味無窮", price: 60, category: "飲料" },
+    ],
+  },
+  {
+    slug: "bombay-curry",
+    name: "孟買印度咖哩屋",
+    category: "印度",
+    tagline: "正統北印度・坦都窯烤",
+    rating: 4.6,
+    review_count: 2240,
+    min_order: 250,
+    delivery_time: "30-45 分鐘",
+    menu: [
+      { name: "奶油雞咖哩", description: "番茄奶油醬燉雞，濃郁微甜", price: 220, category: "印度咖哩" },
+      { name: "瑪薩拉羊肉咖哩", description: "香料燉到軟爛的羊肉", price: 260, category: "印度咖哩" },
+      { name: "菠菜起司咖哩", description: "菠菜泥燴印度起司，純素友善", price: 200, category: "印度咖哩" },
+      { name: "坦都里烤雞（半隻）", description: "優格香料醃漬，窯烤上色", price: 240, category: "窯烤" },
+      { name: "蒜香印度烤餅", description: "現烤 Naan，蒜香四溢", price: 60, category: "烤餅" },
+      { name: "原味印度烤餅", description: "蓬鬆有嚼勁的現烤餅", price: 50, category: "烤餅" },
+      { name: "咖哩餃（兩個）", description: "酥皮包馬鈴薯咖哩餡 Samosa", price: 80, category: "印度咖哩" },
+      { name: "芒果優格拉西", description: "冰涼濃稠的芒果優格飲", price: 90, category: "飲料" },
+      { name: "印度香料奶茶", description: "瑪薩拉香料煮的甜奶茶", price: 70, category: "飲料" },
+    ],
+  },
+  {
+    slug: "amigo-mexican",
+    name: "阿米哥墨西哥餐廳",
+    category: "墨西哥",
+    tagline: "墨西哥街頭・塔可捲餅",
+    rating: 4.5,
+    review_count: 1680,
+    min_order: 220,
+    delivery_time: "30-45 分鐘",
+    menu: [
+      { name: "招牌牛肉塔可（三入）", description: "玉米餅夾炭烤牛肉莎莎醬", price: 180, category: "塔可" },
+      { name: "雞肉塔可（三入）", description: "墨西哥香料雞肉塔可", price: 170, category: "塔可" },
+      { name: "招牌牛肉捲餅", description: "大份量飽足的 Burrito", price: 190, category: "捲餅" },
+      { name: "雞肉酪梨捲餅", description: "酪梨醬與雞肉的清爽組合", price: 180, category: "捲餅" },
+      { name: "起司玉米片", description: "脆玉米片淋滿起司醬 Nachos", price: 120, category: "玉米片" },
+      { name: "莎莎醬玉米片", description: "番茄莎莎醬配脆玉米片", price: 110, category: "玉米片" },
+      { name: "雞肉法士達", description: "鐵板炒雞肉甜椒，自己包", price: 200, category: "塔可" },
+      { name: "墨西哥香料炒飯", description: "番茄香料炒出的西班牙飯", price: 130, category: "主食" },
+      { name: "莫吉托（無酒精）", description: "薄荷萊姆氣泡飲", price: 90, category: "飲料" },
+    ],
+  },
+  {
+    slug: "yakiniku-dojo",
+    name: "燒肉道場",
+    category: "燒肉",
+    tagline: "日式燒肉・炭火直烤",
+    rating: 4.8,
+    review_count: 3560,
+    min_order: 300,
+    delivery_time: "35-50 分鐘",
+    menu: [
+      { name: "特選牛五花", description: "油花分布均勻，一烤就香", price: 220, category: "燒肉" },
+      { name: "厚切牛舌", description: "彈牙多汁，擠檸檬最對味", price: 260, category: "燒肉" },
+      { name: "霜降松阪豬", description: "粉嫩松阪豬，脆口不柴", price: 180, category: "燒肉" },
+      { name: "韓式醬豬五花", description: "甜辣醬醃漬的厚切豬五花", price: 170, category: "燒肉" },
+      { name: "安格斯牛小排", description: "帶骨牛小排，油脂噴香", price: 280, category: "燒肉" },
+      { name: "鹽蔥雞腿肉", description: "蔥鹽風味去骨雞腿", price: 160, category: "燒肉" },
+      { name: "韓式石鍋拌飯", description: "石鍋鍋巴香，拌開更好吃", price: 150, category: "飯食" },
+      { name: "韓式泡菜", description: "微酸微辣，解膩必備", price: 50, category: "小菜" },
+      { name: "炭烤時蔬拼盤", description: "杏鮑菇、玉米、甜椒一次烤", price: 90, category: "蔬菜" },
+      { name: "韓國生啤酒", description: "（未成年請勿飲酒）", price: 90, category: "飲料" },
+    ],
+  },
+  {
+    slug: "snowice-house",
+    name: "雪花冰の家",
+    category: "冰品",
+    tagline: "綿綿雪花冰・夏日限定",
+    rating: 4.7,
+    review_count: 3980,
+    min_order: 120,
+    delivery_time: "20-30 分鐘",
+    menu: [
+      { name: "新鮮芒果雪花冰", description: "整顆愛文芒果＋煉乳雪花冰", price: 150, category: "雪花冰" },
+      { name: "草莓煉乳雪花冰", description: "酸甜草莓鋪滿綿綿冰", price: 140, category: "雪花冰" },
+      { name: "抹茶紅豆綿綿冰", description: "宇治抹茶淋上綿綿冰", price: 130, category: "雪花冰" },
+      { name: "招牌八寶冰", description: "紅豆、芋圓、粉圓、仙草八種料", price: 90, category: "剉冰" },
+      { name: "黑糖粉粿牛奶冰", description: "黑糖粉粿配綿密牛奶冰", price: 110, category: "雪花冰" },
+      { name: "芋圓地瓜圓剉冰", description: "手工芋圓地瓜圓加剉冰", price: 85, category: "剉冰" },
+      { name: "古早味紅豆牛奶冰", description: "綿密紅豆配煉乳牛奶冰", price: 95, category: "剉冰" },
+      { name: "綜合水果雪花冰", description: "當季水果繽紛一大碗", price: 140, category: "雪花冰" },
+      { name: "仙草凍剉冰", description: "Q彈仙草凍配剉冰", price: 80, category: "剉冰" },
+      { name: "冬瓜檸檬", description: "古早味冬瓜配檸檬", price: 50, category: "飲料" },
+    ],
+  },
+  {
+    slug: "donut-planet",
+    name: "甜甜圈星球",
+    category: "飲料甜點",
+    tagline: "現炸甜甜圈・療癒系下午茶",
+    rating: 4.6,
+    review_count: 2870,
+    min_order: 120,
+    delivery_time: "20-30 分鐘",
+    menu: [
+      { name: "原味糖霜甜甜圈", description: "經典蓬鬆，裹滿糖霜", price: 45, category: "甜甜圈" },
+      { name: "巧克力淋醬甜甜圈", description: "濃郁巧克力淋醬", price: 55, category: "甜甜圈" },
+      { name: "草莓糖霜甜甜圈", description: "粉嫩草莓糖霜＋彩糖", price: 55, category: "甜甜圈" },
+      { name: "肉桂糖甜甜圈", description: "現炸裹肉桂糖粉", price: 50, category: "甜甜圈" },
+      { name: "蜂蜜波堤（六入）", description: "Q彈相連的蜂蜜波堤", price: 90, category: "甜甜圈" },
+      { name: "花生醬法蘭奇", description: "酥脆法蘭奇淋花生醬", price: 60, category: "甜甜圈" },
+      { name: "美式咖啡", description: "現萃黑咖啡，配甜甜圈剛好", price: 70, category: "飲料" },
+      { name: "拿鐵", description: "拉花拿鐵", price: 90, category: "飲料" },
+      { name: "草莓奶昔", description: "濃郁草莓奶昔", price: 90, category: "飲料" },
+    ],
+  },
 ];
 
 // ---- 假評論產生（台灣在地口吻、繁體中文） ----
@@ -728,7 +862,27 @@ export type FoodType =
   | "soda"
   | "beer"
   | "soymilk"
-  | "coldchicken";
+  | "coldchicken"
+  // 圖文修正用的精準類型
+  | "mushroom"
+  | "meatball"
+  | "shrimpcake"
+  | "banhmi"
+  | "luwei"
+  // 新增料理類別
+  | "dimsum"
+  | "charsiu"
+  | "naan"
+  | "indian-curry"
+  | "tandoori"
+  | "taco"
+  | "burrito"
+  | "nachos"
+  | "yakiniku"
+  | "shavedice"
+  | "donut"
+  | "bibimbap"
+  | "kimchi";
 
 // 這些「單一主題店容易整排重複」的類型各備有第二張照片（檔名加 2），
 // 依菜名雜湊輪流使用，讓火鍋店 / 串燒店 / 丼飯店…點進去不會整排同一張圖。
@@ -736,6 +890,7 @@ const VARIANT_TYPES = new Set<FoodType>([
   "hotpot", "stirfry", "thai-curry", "ramen", "skewer", "katsu-curry",
   "pizza", "sushi", "pasta", "cake", "friedchicken", "beef-noodle",
   "bento", "douhua", "karaage", "pancake", "tea",
+  "dimsum", "yakiniku", "shavedice", "donut", "indian-curry",
 ]);
 
 function foodImg(type: FoodType): string {
@@ -770,6 +925,12 @@ const RESTAURANT_FOOD: Record<string, FoodType> = {
   "yeshi-steak": "steak",
   "alley-pasta": "pasta",
   "charcoal-skewer": "skewer",
+  "tim-dimsum": "dimsum",
+  "bombay-curry": "indian-curry",
+  "amigo-mexican": "taco",
+  "yakiniku-dojo": "yakiniku",
+  "snowice-house": "shavedice",
+  "donut-planet": "donut",
 };
 
 // 依菜名 + 分類關鍵字判斷菜色類型（順序：特定 → 一般），比對不到就用餐廳招牌圖。
@@ -792,9 +953,9 @@ function dishToFoodType(
   if (has("啤酒", "米酒", "調酒", "沙瓦")) return "beer";
   if (has("咖啡", "拿鐵")) return "coffee";
   if (has("豆漿")) return "soymilk";
-  if (has("可樂", "汽水", "沙士", "雪碧", "氣泡")) return "soda";
+  if (has("可樂", "汽水", "沙士", "雪碧", "氣泡", "莫吉托")) return "soda";
   if (has("珍珠", "珍奶", "波霸")) return "bubble-tea";
-  if (has("奶茶", "鮮奶", "奶昔", "冰奶")) return "milktea";
+  if (has("奶茶", "鮮奶", "奶昔", "冰奶", "拉西", "優格")) return "milktea";
   if (
     has(
       "綠茶", "紅茶", "青茶", "四季春", "冬瓜", "麥茶", "酸梅", "多多", "養樂多",
@@ -805,9 +966,14 @@ function dishToFoodType(
   // 飲料分類但沒對到具體品項 → 給杯茶飲（保底，免得落到食物圖）
   if (category.includes("飲料")) return "tea";
 
-  // 2) 甜點：豆花 / 甜湯 / 鬆餅舒芙蕾 / 蛋糕系
+  // 2) 甜點（剉冰 / 甜甜圈 先於豆花蛋糕，免得草莓雪花冰被當蛋糕、巧克力甜甜圈被當蛋糕）
+  if (has("雪花冰", "綿綿冰", "剉冰", "挫冰", "刨冰", "牛奶冰", "八寶冰", "芒果冰"))
+    return "shavedice";
+  if (has("甜甜圈", "波堤", "法蘭奇", "多拿滋")) return "donut";
   if (has("豆花", "杏仁豆")) return "douhua";
-  if (has("湯圓", "紅豆", "燒仙草", "仙草", "綠豆", "芋圓", "地瓜圓", "甜湯"))
+  if (
+    has("湯圓", "紅豆", "燒仙草", "仙草", "綠豆", "芋圓", "地瓜圓", "甜湯", "楊枝甘露")
+  )
     return "sweetsoup";
   if (has("舒芙蕾", "鬆餅")) return "waffle";
   if (
@@ -815,6 +981,22 @@ function dishToFoodType(
       "巧克力", "草莓", "莓果", "焦糖", "甜點")
   )
     return "cake";
+
+  // 2.5) 新增料理：港式 / 韓式 / 印度 / 墨西哥 / 越式（先於通用飯麵咖哩，免得被誤判）
+  if (has("石鍋拌", "拌飯")) return "bibimbap"; // 先於 鍋物
+  if (category.includes("燒肉") || has("燒肉", "烤肉")) return "yakiniku"; // 先於 串/五花
+  if (has("泡菜")) return "kimchi";
+  if (has("蝦餃", "燒賣", "腸粉", "鳳爪")) return "dimsum";
+  if (has("叉燒", "燒臘", "油雞飯", "燒鴨", "脆皮燒")) return "charsiu";
+  if (has("烤餅", "naan", "饢")) return "naan"; // 先於 indian-curry（印度烤餅含「印度」）
+  if (has("坦都", "tandoori")) return "tandoori";
+  if (has("瑪薩拉", "奶油雞", "咖哩餃", "咖哩角") || category.includes("印度"))
+    return "indian-curry"; // 先於 katsu 咖哩
+  if (has("塔可", "taco", "法士達")) return "taco";
+  if (has("捲餅", "burrito")) return "burrito";
+  if (has("玉米片", "nachos")) return "nachos";
+  if (has("月亮蝦餅", "蝦餅")) return "shrimpcake"; // 先於 泰式
+  if (has("法國麵包", "越式法國")) return "banhmi"; // 先於 河粉/便當
 
   // 3) 炒飯 / 炒麵 / 炒河粉（先於 泰式 / 河粉，否則 泰式炒河粉 會變綠咖哩或湯麵）
   if (has("炒飯", "炒米粉", "炒麵", "炒河粉", "什錦炒")) return "friedrice";
@@ -828,8 +1010,8 @@ function dishToFoodType(
     return "pasta";
   if (has("串", "串燒", "香腸", "米血", "烤雞翅", "五花")) return "skewer";
 
-  // 5) 咖哩 / 泰式（先於 飯/便當/炸雞/麵）
-  if (has("打拋", "綠咖哩", "月亮蝦餅", "椒麻", "酸辣", "青木瓜", "泰式", "冬陰"))
+  // 5) 咖哩 / 泰式（先於 飯/便當/炸雞/麵；月亮蝦餅已在前面歸 shrimpcake）
+  if (has("打拋", "綠咖哩", "椒麻", "酸辣", "青木瓜", "泰式", "冬陰"))
     return "thai-curry";
   if (has("咖哩")) return "katsu-curry";
 
@@ -840,6 +1022,9 @@ function dishToFoodType(
   if (has("滷蛋", "溫泉蛋", "半熟蛋", "糖心", "溏心", "茶碗蒸", "茶葉蛋", "水波蛋"))
     return "egg";
   if (has("豆腐", "豆包", "百頁", "豆干")) return "tofu";
+  // 滷味小菜（滷牛腱 / 嘴邊肉）；菇類（杏鮑菇 等，修正圖文不符）
+  if (has("滷牛腱", "嘴邊肉", "滷味", "滷大腸")) return "luwei";
+  if (has("杏鮑菇", "金針菇", "鴻喜菇", "香菇", "秀珍菇")) return "mushroom";
 
   // 8) 鹹湯（甜湯 / 酒釀湯 / 酸辣湯 / 酸梅湯 已在前面攔截，剩下的 湯 都是鹹湯）
   if (has("湯")) return "soup";
@@ -856,7 +1041,10 @@ function dishToFoodType(
 
   // 11) 飯 / 便當（便當先於熱炒，三杯猴頭菇便當才不會變熱炒）
   if (has("滷肉飯", "魯肉", "控肉", "爌肉", "米糕", "肉燥", "油飯")) return "luroufan";
-  if (has("排骨", "豬排", "便當", "鯖魚", "素排")) return "bento";
+  if (has("排骨", "豬排", "便當", "鯖魚", "素排", "香茅雞飯", "雞飯")) return "bento";
+
+  // 11.5) 肉圓 / 碗粿（修正：原本落到割包圖）
+  if (has("肉圓", "碗粿")) return "meatball";
 
   // 12) 割包（先於 雞排，雞排割包才會是割包）
   if (has("割包", "刈包", "包子", "虎咬豬")) return "bao";
@@ -881,7 +1069,8 @@ function dishToFoodType(
   if (has("蛋餅", "飯糰", "蘿蔔糕", "班尼迪克", "歐姆", "蔥抓")) return "pancake";
 
   // 16) 鹹水雞 / 白斬雞（雞肉部位）→ 白切雞盤；純蔬菜才走 veg
-  if (has("鹹水", "白斬", "白切", "雞胗", "拼盤")) return "coldchicken";
+  // 用「綜合拼盤」而非裸「拼盤」，免得燒肉店的「時蔬拼盤」被誤判
+  if (has("鹹水", "白斬", "白切", "雞胗", "綜合拼盤")) return "coldchicken";
 
   // 17) 蔬菜 / 小菜（含 category 為「蔬菜」者）
   if (

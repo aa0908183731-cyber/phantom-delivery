@@ -24,25 +24,18 @@ export default function MenuItemCard({
   restaurantName: string;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
-  const [conflictOpen, setConflictOpen] = useState(false);
   const [pop, setPop] = useState(0);
 
   const addItem = useCartStore((s) => s.addItem);
   const increment = useCartStore((s) => s.increment);
   const decrement = useCartStore((s) => s.decrement);
-  const clear = useCartStore((s) => s.clear);
   const qty = useCartStore(
     (s) => s.items.find((i) => i.menuItemId === item.id)?.quantity ?? 0,
   );
-  const cartRestaurantName = useCartStore(
-    (s) => s.items.find((i) => i.restaurantId !== restaurantId)?.restaurantName,
-  );
-  const hasOtherRestaurant = useCartStore((s) =>
-    s.items.some((i) => i.restaurantId !== restaurantId),
-  );
   const show = useToastStore((s) => s.show);
 
-  function doAdd() {
+  // 一次可以幻想很多家：直接加入，不再限制只能點一家
+  function handleFirstAdd() {
     addItem({
       menuItemId: item.id,
       restaurantId,
@@ -53,15 +46,6 @@ export default function MenuItemCard({
     });
     setPop((p) => p + 1);
     show(`已加入「${item.name}」🛒`, { emoji: "✅" });
-  }
-
-  // 加入第一份（會檢查是否跨餐廳）
-  function handleFirstAdd() {
-    if (hasOtherRestaurant) {
-      setConflictOpen(true);
-      return;
-    }
-    doAdd();
   }
 
   const stop = (e: React.MouseEvent) => e.stopPropagation();
@@ -208,52 +192,6 @@ export default function MenuItemCard({
                 >
                   {qty === 0 ? "加入購物車" : `再加一份（目前 ${qty}）`} ・{" "}
                   {formatNT(item.price)}
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* 跨餐廳：清空購物車確認（foodpanda 行為） */}
-      <AnimatePresence>
-        {conflictOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setConflictOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 z-[60] w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-border bg-surface p-6 text-center"
-            >
-              <p className="text-4xl">🍱</p>
-              <p className="mt-3 text-lg font-bold">要換一家嗎？</p>
-              <p className="mt-2 text-sm text-zinc-500">
-                購物車裡還有「{cartRestaurantName}」的餐點。<br />
-                一次只能幻想一家，要清空並改點「{restaurantName}」嗎？
-              </p>
-              <div className="mt-5 flex gap-3">
-                <button
-                  onClick={() => setConflictOpen(false)}
-                  className="flex-1 rounded-full bg-surface-2 py-3 text-sm font-medium"
-                >
-                  保留原本的
-                </button>
-                <button
-                  onClick={() => {
-                    clear();
-                    doAdd();
-                    setConflictOpen(false);
-                  }}
-                  className="flex-1 rounded-full bg-panda py-3 text-sm font-bold text-white"
-                >
-                  清空並新增
                 </button>
               </div>
             </motion.div>

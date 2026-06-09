@@ -34,8 +34,12 @@ interface OrderState {
   orders: Record<string, StoredOrder>;
   /** 最近一筆訂單 id（給確認頁用） */
   lastOrderId: string | null;
+  /** 最近「一次結帳」產生的所有訂單 id（可一次幻想很多家） */
+  lastOrderIds: string[];
   hasHydrated: boolean;
   addOrder: (order: StoredOrder) => void;
+  /** 一次加入多筆訂單（多家餐廳一起下單） */
+  addOrders: (orders: StoredOrder[]) => void;
   getOrder: (id: string) => StoredOrder | undefined;
   updateRider: (id: string, lat: number, lng: number) => void;
 }
@@ -45,13 +49,27 @@ export const useOrderStore = create<OrderState>()(
     (set, get) => ({
       orders: {},
       lastOrderId: null,
+      lastOrderIds: [],
       hasHydrated: false,
 
       addOrder: (order) =>
         set((state) => ({
           orders: { ...state.orders, [order.id]: order },
           lastOrderId: order.id,
+          lastOrderIds: [order.id],
         })),
+
+      addOrders: (list) =>
+        set((state) => {
+          const next = { ...state.orders };
+          for (const o of list) next[o.id] = o;
+          const ids = list.map((o) => o.id);
+          return {
+            orders: next,
+            lastOrderId: ids[ids.length - 1] ?? state.lastOrderId,
+            lastOrderIds: ids.length > 0 ? ids : state.lastOrderIds,
+          };
+        }),
 
       getOrder: (id) => get().orders[id],
 

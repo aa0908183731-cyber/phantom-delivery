@@ -9,6 +9,7 @@ import { useToastStore } from "@/store/toastStore";
 import { shortOrderCode } from "@/lib/fakeDelivery";
 import { formatNT } from "@/lib/format";
 import TopBar from "@/components/TopBar";
+import AllOrdersTracker from "@/components/AllOrdersTracker";
 
 export default function OrdersPage() {
   const router = useRouter();
@@ -26,6 +27,9 @@ export default function OrdersPage() {
       ),
     [orders],
   );
+
+  // 同時追蹤的外送員（最多顯示最近 8 位，免得地圖太擠）
+  const liveIds = useMemo(() => list.slice(0, 8).map((o) => o.id), [list]);
 
   function reorder(orderId: string) {
     const o = orders[orderId];
@@ -52,6 +56,24 @@ export default function OrdersPage() {
     <>
       <TopBar showBack title="我的訂單" />
       <main className="mx-auto max-w-2xl space-y-3 px-4 pb-28 pt-4">
+        {/* 一次幻想很多家：全部外送員同框繞圈圈 */}
+        {hasHydrated && list.length >= 2 && (
+          <section className="overflow-hidden rounded-2xl border border-border bg-surface">
+            <div className="flex items-center justify-between px-4 py-3">
+              <h2 className="flex items-center gap-2 font-bold text-zinc-900">
+                🛵 全部一起運送中
+                <span className="rounded-full bg-panda/10 px-2 py-0.5 text-xs font-medium text-panda">
+                  {liveIds.length} 位
+                </span>
+              </h2>
+              <span className="text-xs text-zinc-400">永遠不會到 😌</span>
+            </div>
+            <div className="h-64 w-full">
+              <AllOrdersTracker key={liveIds.join(",")} orderIds={liveIds} />
+            </div>
+          </section>
+        )}
+
         {hasHydrated && list.length === 0 && (
           <div className="py-24 text-center">
             <p className="text-5xl">🧾</p>

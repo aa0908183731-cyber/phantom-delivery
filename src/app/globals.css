@@ -114,6 +114,22 @@ body {
   transition: transform 2.9s linear !important;
 }
 
+/* 多家一起追蹤時，外送員上方的小店名標籤 */
+.leaflet-tooltip.rider-tip {
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: none;
+  white-space: nowrap;
+}
+.leaflet-tooltip.rider-tip::before {
+  display: none;
+}
+
 /* 你家 pin + 脈動光環 */
 .home-pin {
   position: relative;

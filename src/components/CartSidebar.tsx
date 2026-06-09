@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   useCartStore,
+  groupByRestaurant,
   DELIVERY_FEE,
   SERVICE_FEE,
 } from "@/store/cartStore";
@@ -22,7 +23,8 @@ export default function CartSidebar() {
   const count = useCartStore((s) => s.totalCount());
 
   const showBar = hasHydrated && count > 0;
-  const restaurantName = items[0]?.restaurantName;
+  const groups = groupByRestaurant(items);
+  const fees = (DELIVERY_FEE + SERVICE_FEE) * groups.length;
 
   return (
     <>
@@ -78,8 +80,12 @@ export default function CartSidebar() {
               <div className="flex items-center justify-between border-b border-border px-5 py-4">
                 <div>
                   <h2 className="text-lg font-bold">你的購物車</h2>
-                  {restaurantName && (
-                    <p className="text-xs text-zinc-500">{restaurantName}</p>
+                  {groups.length > 0 && (
+                    <p className="text-xs text-zinc-500">
+                      {groups.length === 1
+                        ? groups[0].restaurantName
+                        : `${groups.length} 家餐廳一起幻想 🛵`}
+                    </p>
                   )}
                 </div>
                 <button
@@ -90,63 +96,70 @@ export default function CartSidebar() {
                 </button>
               </div>
 
-              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+              <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
                 {items.length === 0 && (
                   <p className="mt-16 text-center text-sm text-zinc-500">
                     購物車是空的<br />
                     （但反正也不會送來啦）
                   </p>
                 )}
-                {items.map((item) => (
-                  <div
-                    key={item.menuItemId}
-                    className="flex gap-3 rounded-xl bg-surface-2 p-3"
-                  >
-                    {item.imageUrl && (
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.name}
-                        width={56}
-                        height={56}
-                        className="h-14 w-14 rounded-lg object-cover"
-                      />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">
-                        {item.name}
-                      </p>
-                      <p className="text-xs text-zinc-500">
-                        {item.restaurantName}
-                      </p>
-                      <p className="mt-1 text-sm font-semibold text-uber">
-                        {formatNT(item.price * item.quantity)}
+                {groups.map((g) => (
+                  <div key={g.restaurantId} className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">🏬</span>
+                      <p className="truncate text-sm font-bold text-zinc-800">
+                        {g.restaurantName}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end justify-between">
-                      <button
-                        onClick={() => removeItem(item.menuItemId)}
-                        className="text-xs text-zinc-500 hover:text-panda"
+                    {g.items.map((item) => (
+                      <div
+                        key={item.menuItemId}
+                        className="flex gap-3 rounded-xl bg-surface-2 p-3"
                       >
-                        刪除
-                      </button>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => decrement(item.menuItemId)}
-                          className="grid h-7 w-7 place-items-center rounded-full bg-bg text-zinc-800"
-                        >
-                          −
-                        </button>
-                        <span className="w-5 text-center text-sm">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => increment(item.menuItemId)}
-                          className="grid h-7 w-7 place-items-center rounded-full bg-uber text-black"
-                        >
-                          +
-                        </button>
+                        {item.imageUrl && (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.name}
+                            width={56}
+                            height={56}
+                            className="h-14 w-14 rounded-lg object-cover"
+                          />
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">
+                            {item.name}
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-uber">
+                            {formatNT(item.price * item.quantity)}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end justify-between">
+                          <button
+                            onClick={() => removeItem(item.menuItemId)}
+                            className="text-xs text-zinc-500 hover:text-panda"
+                          >
+                            刪除
+                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => decrement(item.menuItemId)}
+                              className="grid h-7 w-7 place-items-center rounded-full bg-bg text-zinc-800"
+                            >
+                              −
+                            </button>
+                            <span className="w-5 text-center text-sm">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => increment(item.menuItemId)}
+                              className="grid h-7 w-7 place-items-center rounded-full bg-uber text-black"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -158,15 +171,18 @@ export default function CartSidebar() {
                     <span>{formatNT(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-zinc-500">
-                    <span>外送費 + 服務費</span>
-                    <span>{formatNT(DELIVERY_FEE + SERVICE_FEE)}</span>
+                    <span>
+                      外送費 + 服務費
+                      {groups.length > 1 ? ` ×${groups.length} 家` : ""}
+                    </span>
+                    <span>{formatNT(fees)}</span>
                   </div>
                   <Link
                     href="/cart"
                     onClick={() => setOpen(false)}
                     className="block rounded-full bg-uber py-3 text-center font-bold text-black transition hover:brightness-105"
                   >
-                    前往結帳 ・ {formatNT(subtotal + DELIVERY_FEE + SERVICE_FEE)}
+                    前往結帳 ・ {formatNT(subtotal + fees)}
                   </Link>
                 </div>
               )}

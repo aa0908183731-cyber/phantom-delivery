@@ -23,6 +23,8 @@ interface CartState {
   clear: () => void;
   totalCount: () => number;
   subtotal: () => number;
+  /** 購物車裡有幾家不同餐廳（可一次幻想很多家） */
+  restaurantCount: () => number;
 }
 
 export const useCartStore = create<CartState>()(
@@ -80,6 +82,9 @@ export const useCartStore = create<CartState>()(
 
       subtotal: () =>
         get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+
+      restaurantCount: () =>
+        new Set(get().items.map((i) => i.restaurantId)).size,
     }),
     {
       name: "phantom-cart",
@@ -89,6 +94,33 @@ export const useCartStore = create<CartState>()(
     },
   ),
 );
+
+export interface CartGroup {
+  restaurantId: string;
+  restaurantName: string;
+  items: CartItem[];
+  subtotal: number;
+}
+
+/** 依餐廳把購物車品項分組（保留首次出現的順序），給「一次很多家」的畫面與結帳用。 */
+export function groupByRestaurant(items: CartItem[]): CartGroup[] {
+  const order: string[] = [];
+  const map: Record<string, CartGroup> = {};
+  for (const it of items) {
+    if (!map[it.restaurantId]) {
+      map[it.restaurantId] = {
+        restaurantId: it.restaurantId,
+        restaurantName: it.restaurantName,
+        items: [],
+        subtotal: 0,
+      };
+      order.push(it.restaurantId);
+    }
+    map[it.restaurantId].items.push(it);
+    map[it.restaurantId].subtotal += it.price * it.quantity;
+  }
+  return order.map((id) => map[id]);
+}
 
 // 外送費與服務費（從 lib/fees 再匯出，方便沿用既有 import 路徑）
 export { DELIVERY_FEE, SERVICE_FEE } from "@/lib/fees";
