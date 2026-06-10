@@ -6,6 +6,7 @@ import { useOrderStore } from "@/store/orderStore";
 import {
   DESTINATION,
   nextRiderPosition,
+  projectOntoRoute,
   riderOrigin,
   routePoints,
   type LatLng,
@@ -53,23 +54,32 @@ export default function AllOrdersTracker({ orderIds }: { orderIds: string[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 初始化每位外送員位置（沿用 store 內最後座標）
+  // 初始化每位外送員位置：第一次從餐廳出發，已在路上就沿用上次位置
   useEffect(() => {
     const init: Record<string, LatLng> = {};
-    for (const o of orders) init[o.id] = { lat: o.riderLat, lng: o.riderLng };
+    for (const o of orders) {
+      const g = geo[o.id];
+      const stored = { lat: o.riderLat, lng: o.riderLng };
+      const onRoute = g ? projectOntoRoute(stored, g.route).dist < 100 : false;
+      init[o.id] = onRoute || !g ? stored : g.origin;
+    }
     posRef.current = init;
     setPositions(init);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 單一計時器同時推進所有外送員
+  // 單一計時器同時推進所有外送員（沿各自路線前進，備餐中先停在店裡）
   useEffect(() => {
     const timer = setInterval(() => {
       const next: Record<string, LatLng> = { ...posRef.current };
       for (const o of orders) {
-        const dest = geo[o.id]?.dest ?? DESTINATION;
+        const g = geo[o.id];
+        const dest = g?.dest ?? DESTINATION;
         const cur = next[o.id] ?? { lat: o.riderLat, lng: o.riderLng };
-        const np = nextRiderPosition(cur, dest);
+        const np =
+          g && Date.now() - new Date(o.createdAt).getTime() < 28_000
+            ? g.origin
+            : nextRiderPosition(cur, dest, g?.route);
         next[o.id] = np;
         updateRider(o.id, np.lat, np.lng);
       }

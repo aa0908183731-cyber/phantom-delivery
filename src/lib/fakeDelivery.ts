@@ -88,6 +88,58 @@ export function routePoints(origin: LatLng, dest: LatLng): LatLng[] {
   ];
 }
 
+/** 路線各段的累積長度（公尺）。 */
+function routeCumulative(route: LatLng[]): { cum: number[]; total: number } {
+  const cum = [0];
+  for (let i = 1; i < route.length; i++) {
+    cum[i] = cum[i - 1] + distanceMeters(route[i - 1], route[i]);
+  }
+  return { cum, total: cum[cum.length - 1] || 1 };
+}
+
+/** 路線上 arc-length 比例 t∈[0,1] 對應的座標。 */
+export function pointAtFraction(route: LatLng[], t: number): LatLng {
+  if (route.length === 1) return route[0];
+  const { cum, total } = routeCumulative(route);
+  const target = clamp(t, 0, 1) * total;
+  for (let i = 1; i < route.length; i++) {
+    if (target <= cum[i]) {
+      const segLen = cum[i] - cum[i - 1] || 1;
+      return lerpLatLng(route[i - 1], route[i], (target - cum[i - 1]) / segLen);
+    }
+  }
+  return route[route.length - 1];
+}
+
+/**
+ * 把點投影到路線上，回傳最近點的 arc-length 比例 t 與垂直距離（公尺）。
+ * 用來：(1) 由外送員當前座標推回「沿路線走了多遠」；(2) 判斷是否已在路上。
+ */
+export function projectOntoRoute(
+  p: LatLng,
+  route: LatLng[],
+): { t: number; dist: number } {
+  const { cum, total } = routeCumulative(route);
+  const mPerLng = metersPerDegLng(route[0].lat);
+  let best = { t: 0, dist: Infinity };
+  for (let i = 1; i < route.length; i++) {
+    const a = route[i - 1];
+    const b = route[i];
+    const bx = (b.lng - a.lng) * mPerLng;
+    const by = (b.lat - a.lat) * METERS_PER_DEG_LAT;
+    const px = (p.lng - a.lng) * mPerLng;
+    const py = (p.lat - a.lat) * METERS_PER_DEG_LAT;
+    const segLen2 = bx * bx + by * by || 1;
+    const u = clamp((px * bx + py * by) / segLen2, 0, 1);
+    const dist = Math.hypot(px - u * bx, py - u * by);
+    if (dist < best.dist) {
+      const along = cum[i - 1] + u * (cum[i] - cum[i - 1]);
+      best = { t: along / total, dist };
+    }
+  }
+  return best;
+}
+
 function polarToLatLng(r: number, theta: number, dest: LatLng): LatLng {
   const mX = r * Math.cos(theta);
   const mY = r * Math.sin(theta);
@@ -97,23 +149,46 @@ function polarToLatLng(r: number, theta: number, dest: LatLng): LatLng {
   };
 }
 
+// 沿路線前進的參數
+const STALL_T = 0.86; // 永遠卡在路線 ~86%（離家幾百公尺），看起來「馬上到」
+const STEP_T = 0.06; // 每 3 秒沿路線前進約 6%（穩定速度，像真的在騎車）
+
 /**
- * 根據目前座標產生下一個假座標（以 dest 為圓心）。
- * 永遠維持在 1~3km 環帶，永遠不靠近終點。
+ * 根據目前座標產生下一個假座標。
+ *
+ * 有 route 時：外送員「沿著導航線」從餐廳往你家前進，接近時就卡在 ~86%、
+ * 在門口附近來回徘徊，永遠差最後一段（紅燈／找車位／走錯路）。
+ * 沒有 route 時：退回舊的「環帶繞圈」模型。
  */
 export function nextRiderPosition(
   prev: LatLng,
   dest: LatLng = DESTINATION,
+  route?: LatLng[],
 ): LatLng {
+  if (route && route.length >= 2) {
+    const { t } = projectOntoRoute(prev, route);
+    let nt: number;
+    if (t < STALL_T - STEP_T) {
+      // 還在路上 → 穩定前進，帶一點點變速
+      nt = t + STEP_T + (Math.random() - 0.5) * 0.015;
+    } else {
+      // 到了門口附近 → 在 ~86% 來回徘徊，永遠到不了 100%
+      nt = STALL_T + (Math.random() - 0.5) * 0.05;
+    }
+    nt = clamp(nt, 0, 0.93);
+    const base = pointAtFraction(route, nt);
+    // 一點點垂直晃動，像在巷子裡鑽，不會死板地貼在線上
+    return offsetPerp(base, route[0], dest, (Math.random() - 0.5) * 30);
+  }
+
+  // ── 後備：沒有路線時，沿用「環帶繞圈」模型 ──
   const mY = (prev.lat - dest.lat) * METERS_PER_DEG_LAT;
   const mX = (prev.lng - dest.lng) * metersPerDegLng(dest.lat);
 
   let r = Math.hypot(mX, mY);
   let theta = Math.atan2(mY, mX);
 
-  // 繞著你家逆時針漂移（像在附近找路 / 找車位）。
   theta += 0.14 + (Math.random() - 0.5) * 0.3;
-  // 半徑慢慢被拉回 ~600m（看起來一直「快到了」），再加抖動，但永遠不進入終點。
   r += (HOVER_TARGET_M - r) * 0.06 + (Math.random() - 0.5) * 240;
   r = clamp(r, MIN_RADIUS_M, MAX_RADIUS_M);
 

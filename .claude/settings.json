@@ -7,7 +7,9 @@
       "Bash(echo \"global email: [$\\(git config --global user.email\\)]\")",
       "Bash(git add *)",
       "Bash(grep -iE \"\\\\.env\\\\.local$|node_modules|\\\\.next/\")",
-      "WebFetch(domain:commons.wikimedia.org)"
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(node --experimental-strip-types scripts/auditImages.ts)",
+      "Bash(node -e \"try{require.resolve\\('sharp'\\);console.log\\('sharp OK'\\)}catch\\(e\\){console.log\\('sharp MISSING'\\)}\")"
     ]
   }
 }

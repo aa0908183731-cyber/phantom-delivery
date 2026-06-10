@@ -8,6 +8,7 @@ import { useOrderStore } from "@/store/orderStore";
 import {
   DESTINATION,
   nextRiderPosition,
+  projectOntoRoute,
   riderOrigin,
   routePoints,
   type LatLng,
@@ -53,10 +54,19 @@ export default function TrackingPage({
   const elapsedMs = order ? now - new Date(order.createdAt).getTime() : 0;
   const reached10 = elapsedMs >= TEN_MINUTES;
 
-  // 種下外送員初始位置（沿用上次離開時的位置，不重置）— 規則 7
+  // 種下外送員初始位置：第一次來就從餐廳（路線起點）出發；之前來過、
+  // 外送員已沿路線前進過，就沿用上次停下的位置（不重置）。
   useEffect(() => {
     if (order && riderRef.current === null) {
-      const init = { lat: order.riderLat, lng: order.riderLng };
+      const dest = {
+        lat: order.destLat ?? DESTINATION.lat,
+        lng: order.destLng ?? DESTINATION.lng,
+      };
+      const origin = riderOrigin(order.id, dest);
+      const route = routePoints(origin, dest);
+      const stored = { lat: order.riderLat, lng: order.riderLng };
+      const onRoute = projectOntoRoute(stored, route).dist < 100;
+      const init = onRoute ? stored : origin;
       riderRef.current = init;
       setRider(init);
     }
@@ -75,12 +85,19 @@ export default function TrackingPage({
       lat: order.destLat ?? DESTINATION.lat,
       lng: order.destLng ?? DESTINATION.lng,
     };
+    const origin = riderOrigin(order.id, dest);
+    const route = routePoints(origin, dest);
+    const createdMs = new Date(order.createdAt).getTime();
     const id = setInterval(() => {
       const cur = riderRef.current ?? {
         lat: order.riderLat,
         lng: order.riderLng,
       };
-      const next = nextRiderPosition(cur, dest);
+      // 前 ~28 秒「餐廳備餐中」→ 外送員還在店裡；之後才沿路線出發。
+      const next =
+        Date.now() - createdMs < 28_000
+          ? origin
+          : nextRiderPosition(cur, dest, route);
       riderRef.current = next;
       setRider(next);
       updateRider(order.id, next.lat, next.lng);
